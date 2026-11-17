@@ -6,12 +6,12 @@ Kleiner Server zwischen App und Euroleague-Daten. Er holt Spielplan, Live-Spiels
 
 ## Endpunkte
 
-| Pfad | Inhalt | Zwischenspeicher |
-| --- | --- | --- |
-| `GET /v1/games` | Alle Spiele der Saison, laufende Spiele mit Live-Stand | 60 s, Live-Stand 15 s |
-| `GET /v1/games/:code` | Ein Spiel mit Boxscore und Play-by-Play | 15 s live, 6 h nach Spielende |
-| `GET /v1/standings` | Tabelle nach dem letzten gespielten Spieltag | 5 min |
-| `GET /v1/teams/:code` | Kader eines Clubs, z. B. `MUN` | 12 h |
+| Pfad                  | Inhalt                                                 | Zwischenspeicher              |
+| --------------------- | ------------------------------------------------------ | ----------------------------- |
+| `GET /v1/games`       | Alle Spiele der Saison, laufende Spiele mit Live-Stand | 60 s, Live-Stand 15 s         |
+| `GET /v1/games/:code` | Ein Spiel mit Boxscore und Play-by-Play                | 15 s live, 6 h nach Spielende |
+| `GET /v1/standings`   | Tabelle nach dem letzten gespielten Spieltag           | 5 min                         |
+| `GET /v1/teams/:code` | Kader eines Clubs, z. B. `MUN`                         | 12 h                          |
 
 ## Lokal starten
 
@@ -32,9 +32,16 @@ npm run typecheck
 
 ## Veröffentlichen (kostenlos)
 
+Automatisch über GitHub Actions (`.github/workflows/deploy-server.yml`): Jede Änderung an `server/` auf `main` wird getestet und veröffentlicht. Einmalig einrichten:
+
 1. Kostenloses Konto bei [Cloudflare](https://dash.cloudflare.com/sign-up) anlegen.
-2. `npx wrangler login`, dann `npm run deploy`.
-3. Die angezeigte Adresse (z. B. `https://hoopline-api.<name>.workers.dev`) in der App als `EXPO_PUBLIC_API_URL` setzen.
+2. Unter _Workers & Pages_ einmal eine `workers.dev`-Subdomain wählen.
+3. Unter _My Profile → API Tokens → Create Token_ die Vorlage **Edit Cloudflare Workers** nehmen und den Token erstellen.
+4. Im GitHub-Repo unter _Settings → Secrets and variables → Actions_ zwei Secrets anlegen: `CLOUDFLARE_API_TOKEN` (der Token) und `CLOUDFLARE_ACCOUNT_ID` (steht rechts auf der Workers-Übersicht).
+5. Unter _Actions → Server veröffentlichen → Run workflow_ starten. Die Adresse steht am Ende des Logs, z. B. `https://hoopline-api.<name>.workers.dev`.
+6. Diese Adresse in der App als `EXPO_PUBLIC_API_URL` setzen.
+
+Von Hand geht es auch: `npx wrangler login`, dann `npm run deploy`.
 
 Der Gratisplan von Cloudflare erlaubt 100.000 Anfragen am Tag.
 
