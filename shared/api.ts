@@ -11,6 +11,8 @@ export interface ApiTeam {
   abbr: string;
   name: string;
   shortName: string;
+  /** Club crest image URL from the data source, if any. */
+  logo: string | null;
 }
 
 export type ApiGameStatus = "scheduled" | "live" | "final";

@@ -21,6 +21,7 @@ export interface ElClub {
   tvCode: string;
   name: string;
   abbreviatedName: string;
+  images?: { crest?: string | null } | null;
 }
 
 export interface ElPartials {
@@ -140,6 +141,7 @@ export function toTeam(c: ElClub): ApiTeam {
     abbr: c.tvCode.slice(0, 3),
     name: c.name,
     shortName: c.abbreviatedName,
+    logo: c.images?.crest || null,
   };
 }
 
