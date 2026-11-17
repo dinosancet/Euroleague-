@@ -4,7 +4,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { CourtArt } from "@/components/court-art";
 import { Chip, Empty } from "@/components/ui";
-import { allNews, useFavorites } from "@/data/store";
+import { NEWS } from "@/data/news";
+import { useFavorites } from "@/data/prefs";
 import { colors, fonts, radius, space } from "@/theme";
 
 type Filter = "all" | "mine";
@@ -12,10 +13,12 @@ type Filter = "all" | "mine";
 export default function NewsScreen() {
   const [filter, setFilter] = useState<Filter>("all");
   const favs = useFavorites();
-  const items = allNews().filter(
+  const items = NEWS.filter(
     (n) => filter === "all" || n.teams.some((t) => favs.includes(t)),
   );
   const [first, ...rest] = items;
+  const open = (id: string) =>
+    router.push({ pathname: "/article/[id]", params: { id } });
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: space.xl }}>
@@ -35,6 +38,9 @@ export default function NewsScreen() {
           onPress={() => setFilter("mine")}
         />
       </ScrollView>
+      <Text style={s.notice}>
+        Beispielartikel, bis eine Nachrichtenquelle angebunden ist.
+      </Text>
 
       {!first ? (
         <Empty>Zu deinen Teams gibt es gerade keine Artikel.</Empty>
@@ -42,12 +48,7 @@ export default function NewsScreen() {
         <>
           <Pressable
             accessibilityRole="link"
-            onPress={() =>
-              router.push({
-                pathname: "/article/[id]",
-                params: { id: first.id },
-              })
-            }
+            onPress={() => open(first.id)}
             style={s.hero}
           >
             <CourtArt teams={first.teams} />
@@ -62,12 +63,7 @@ export default function NewsScreen() {
               <Pressable
                 key={n.id}
                 accessibilityRole="link"
-                onPress={() =>
-                  router.push({
-                    pathname: "/article/[id]",
-                    params: { id: n.id },
-                  })
-                }
+                onPress={() => open(n.id)}
                 style={s.item}
               >
                 <View style={{ flex: 1, gap: 4 }}>
@@ -87,6 +83,13 @@ export default function NewsScreen() {
 
 const s = StyleSheet.create({
   chips: { gap: 6, paddingHorizontal: space.lg, paddingTop: space.md },
+  notice: {
+    fontFamily: fonts.body,
+    fontSize: 11,
+    color: colors.muted,
+    paddingHorizontal: space.lg,
+    paddingTop: space.sm,
+  },
   hero: {
     margin: space.lg,
     marginBottom: space.sm,

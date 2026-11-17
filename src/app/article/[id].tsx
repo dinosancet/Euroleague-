@@ -3,12 +3,15 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { CourtArt } from "@/components/court-art";
 import { Empty, TeamBadge } from "@/components/ui";
-import { newsById, teamById, useFavorites } from "@/data/store";
+import { useStandings } from "@/data/api";
+import { newsById } from "@/data/news";
+import { useFavorites } from "@/data/prefs";
 import { colors, fonts, space } from "@/theme";
 
 export default function ArticleScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const favs = useFavorites();
+  const { data } = useStandings();
   const n = newsById(id);
   if (!n) return <Empty>Artikel nicht gefunden.</Empty>;
 
@@ -24,7 +27,12 @@ export default function ArticleScreen() {
           <Text style={s.p}>{n.body}</Text>
           <Text style={s.mention}>Erwähnte Teams</Text>
           {n.teams.map((tid) => {
-            const t = teamById(tid);
+            const t = data?.rows.find((r) => r.team.code === tid)?.team ?? {
+              code: tid,
+              abbr: tid,
+              name: tid,
+              shortName: tid,
+            };
             return (
               <Pressable
                 key={tid}

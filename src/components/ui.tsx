@@ -9,12 +9,19 @@ import {
   type ViewStyle,
 } from "react-native";
 
-import type { Team } from "@/data/types";
+import type { ApiTeam } from "@shared/api";
+import { clubColors } from "@/data/clubs";
 import { colors, fonts, radius, space } from "@/theme";
 
 /** Team monogram in club colours. Stands in for logos until we have a licence. */
-export function TeamBadge({ team, size = 28 }: { team: Team; size?: number }) {
-  const [c1, c2] = team.colors;
+export function TeamBadge({
+  team,
+  size = 28,
+}: {
+  team: Pick<ApiTeam, "code" | "abbr">;
+  size?: number;
+}) {
+  const [c1, c2] = clubColors(team.code);
   return (
     <View
       accessibilityElementsHidden

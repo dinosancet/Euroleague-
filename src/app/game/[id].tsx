@@ -1,7 +1,22 @@
+import type {
+  ApiGame,
+  ApiGameDetail,
+  ApiPlayerLine,
+  ApiStanding,
+  ApiTeam,
+} from "@shared/api";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
+import { LoadState } from "@/components/load-state";
 import {
   Chip,
   CompareRow,
@@ -12,30 +27,38 @@ import {
   Segmented,
   TeamBadge,
 } from "@/components/ui";
-import { totals } from "@/data/mock";
-import { boxScore, teamById, useGame, usePlays } from "@/data/store";
-import type { Game, Team } from "@/data/types";
+import { useGameDetail, useStandings } from "@/data/api";
+import { formatDay, formatTime } from "@/lib/format";
 import { colors, fonts, radius, space } from "@/theme";
 
 type Tab = "overview" | "box" | "pbp";
 
 export default function GameScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const game = useGame(id);
+  const { data, error, loading, refresh } = useGameDetail(id);
   const [tab, setTab] = useState<Tab>("overview");
-  const plays = usePlays(game);
 
-  if (!game) return <Empty>Spiel nicht gefunden.</Empty>;
-  const home = teamById(game.home);
-  const away = teamById(game.away);
+  if (!data) return <LoadState error={error} onRetry={refresh} />;
+  const { game, box, plays } = data;
 
   return (
     <>
-      <Stack.Screen options={{ title: `${home.abbr} – ${away.abbr}` }} />
-      <ScrollView contentContainerStyle={{ paddingBottom: space.xl }}>
-        <Header game={game} home={home} away={away} />
+      <Stack.Screen
+        options={{ title: `${game.home.abbr} – ${game.away.abbr}` }}
+      />
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: space.xl }}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={refresh}
+            tintColor={colors.ball}
+          />
+        }
+      >
+        <Header game={game} />
         {game.status === "scheduled" ? (
-          <Preview home={home} away={away} />
+          <Preview game={game} />
         ) : (
           <>
             <Segmented<Tab>
@@ -47,30 +70,9 @@ export default function GameScreen() {
                 ["pbp", "Play-by-Play"],
               ]}
             />
-            {tab === "overview" && (
-              <Overview game={game} home={home} away={away} />
-            )}
-            {tab === "box" && <Box game={game} home={home} away={away} />}
-            {tab === "pbp" && (
-              <View style={s.pbp}>
-                {plays.slice(0, 40).map((p, i) => (
-                  <View key={`${plays.length - i}`} style={s.play}>
-                    <Num style={s.playTime}>
-                      Q{p.period}
-                      {"\n"}
-                      {p.clock}
-                    </Num>
-                    <View style={s.playMid}>
-                      <TeamBadge team={p.side === 0 ? home : away} />
-                      <Text style={s.playText}>{p.text}</Text>
-                    </View>
-                    <Num style={s.playScore}>
-                      {p.score[0]}–{p.score[1]}
-                    </Num>
-                  </View>
-                ))}
-              </View>
-            )}
+            {tab === "overview" && <Overview game={game} box={box} />}
+            {tab === "box" && <Box game={game} box={box} />}
+            {tab === "pbp" && <Plays game={game} plays={plays} />}
           </>
         )}
       </ScrollView>
@@ -78,53 +80,60 @@ export default function GameScreen() {
   );
 }
 
-function Header({ game, home, away }: { game: Game; home: Team; away: Team }) {
-  const [hs, as] = totals(game);
-  const side = (t: Team) => (
+function Header({ game }: { game: ApiGame }) {
+  const [hs, as] = game.score;
+  const side = (t: ApiTeam) => (
     <Pressable
-      accessibilityRole="link"
-      onPress={() =>
-        router.push({ pathname: "/team/[id]", params: { id: t.id } })
-      }
       style={s.side}
+      accessibilityRole="link"
       accessibilityLabel={`Teamseite ${t.name}`}
+      onPress={() =>
+        router.push({ pathname: "/team/[id]", params: { id: t.code } })
+      }
     >
       <TeamBadge team={t} size={56} />
       <Text numberOfLines={1} style={s.sideName}>
-        {t.name}
+        {t.shortName}
       </Text>
     </Pressable>
   );
+  const periods = Math.max(4, game.quarters.length);
   return (
     <View style={s.header}>
       <View style={s.scoreRow}>
-        {side(home)}
+        {side(game.home)}
         <View style={s.mid}>
           <Num style={s.big}>
             {game.status === "scheduled" ? "VS" : `${hs}–${as}`}
           </Num>
           {game.status === "live" ? (
-            <LivePill label={`Live · Q${game.period} ${game.clock}`} />
+            <LivePill
+              label={`Live · ${game.period && game.period > 4 ? "OT" : `Q${game.period ?? ""}`} ${game.clock ?? ""}`}
+            />
           ) : (
             <Text style={s.midSmall}>
               {game.status === "final"
                 ? `Endstand · Runde ${game.round}`
-                : `${game.tipOff} Uhr · ${game.arena}`}
+                : `${formatDay(game.startUtc)} · ${formatTime(game.startUtc)} Uhr`}
             </Text>
           )}
         </View>
-        {side(away)}
+        {side(game.away)}
       </View>
       {game.quarters.length > 0 && (
         <View style={s.qtable}>
-          {[null, home, away].map((t, r) => (
+          {[null, game.home, game.away].map((t, r) => (
             <View key={r} style={s.qrow}>
               <Text style={[s.qcell, s.qfirst, r === 0 && s.qhead]}>
                 {t ? t.abbr : ""}
               </Text>
-              {[0, 1, 2, 3].map((q) => (
+              {Array.from({ length: periods }, (_, q) => (
                 <Num key={q} style={[s.qcell, r === 0 && s.qhead]}>
-                  {r === 0 ? `Q${q + 1}` : (game.quarters[q]?.[r - 1] ?? "–")}
+                  {r === 0
+                    ? q < 4
+                      ? `Q${q + 1}`
+                      : "OT"
+                    : (game.quarters[q]?.[r - 1] ?? "–")}
                 </Num>
               ))}
               <Num style={[s.qcell, r === 0 ? s.qhead : s.qtotal]}>
@@ -134,84 +143,90 @@ function Header({ game, home, away }: { game: Game; home: Team; away: Team }) {
           ))}
         </View>
       )}
+      {game.venue ? <Text style={s.venue}>{game.venue}</Text> : null}
     </View>
   );
 }
 
-function Overview({
-  game,
-  home,
-  away,
-}: {
-  game: Game;
-  home: Team;
-  away: Team;
-}) {
-  const b0 = boxScore(game, 0);
-  const b1 = boxScore(game, 1);
-  const sum = (b: typeof b0, k: "rebounds" | "assists") =>
-    b.reduce((x, r) => x + r[k], 0);
-  const top = (b: typeof b0) =>
-    b.reduce((m, r) => (r.points > m.points ? r : m), b[0]);
+const topScorer = (lines: ApiPlayerLine[]) =>
+  lines.reduce<ApiPlayerLine | null>(
+    (m, r) => (!m || r.points > m.points ? r : m),
+    null,
+  );
+
+function Overview({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
+  if (!box)
+    return <Empty>Für dieses Spiel gibt es noch keine Statistiken.</Empty>;
+  const { home, away } = box.totals;
+  const tops: [ApiPlayerLine | null, ApiTeam][] = [
+    [topScorer(box.home), game.home],
+    [topScorer(box.away), game.away],
+  ];
   return (
     <>
       <SectionHeader title="Teamvergleich" />
       <View style={s.cmp}>
         <CompareRow
           label="Rebounds"
-          home={sum(b0, "rebounds")}
-          away={sum(b1, "rebounds")}
+          home={home.rebounds}
+          away={away.rebounds}
         />
+        <CompareRow label="Assists" home={home.assists} away={away.assists} />
         <CompareRow
-          label="Assists"
-          home={sum(b0, "assists")}
-          away={sum(b1, "assists")}
+          label="Dreier"
+          home={home.threesMade}
+          away={away.threesMade}
+        />
+        <CompareRow label="Steals" home={home.steals} away={away.steals} />
+        <CompareRow
+          label="Ballverluste"
+          home={home.turnovers}
+          away={away.turnovers}
+          lowerIsBetter
         />
       </View>
       <SectionHeader title="Beste Werfer" />
       <View style={s.list}>
-        {(
-          [
-            [top(b0), home],
-            [top(b1), away],
-          ] as const
-        ).map(([r, t]) => (
-          <View key={t.id} style={s.player}>
-            <Num style={s.jersey}>{r.player.number}</Num>
-            <View style={{ flex: 1 }}>
-              <Text style={s.pName}>{r.player.name}</Text>
-              <Text style={s.pSub}>
-                {t.name} · {r.rebounds} Reb · {r.assists} Ast
-              </Text>
+        {tops.map(([r, t]) =>
+          r ? (
+            <View key={t.code} style={s.player}>
+              <Num style={s.jersey}>{r.number}</Num>
+              <View style={{ flex: 1 }}>
+                <Text style={s.pName}>{r.name}</Text>
+                <Text style={s.pSub}>
+                  {t.shortName} · {r.rebounds} Reb · {r.assists} Ast
+                </Text>
+              </View>
+              <Num style={s.pPts}>
+                {r.points}
+                <Text style={s.pSub}> PKT</Text>
+              </Num>
             </View>
-            <Num style={s.pPts}>
-              {r.points}
-              <Text style={s.pSub}> PKT</Text>
-            </Num>
-          </View>
-        ))}
+          ) : null,
+        )}
       </View>
     </>
   );
 }
 
-function Box({ game, home, away }: { game: Game; home: Team; away: Team }) {
-  const [side, setSide] = useState<0 | 1>(0);
-  const rows = boxScore(game, side);
+function Box({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
+  const [side, setSide] = useState<"home" | "away">("home");
+  if (!box) return <Empty>Der Boxscore ist noch nicht verfügbar.</Empty>;
+  const rows = box[side];
   const max = Math.max(...rows.map((r) => r.points));
-  const cols = ["MIN", "PKT", "REB", "AST"];
+  const cols = ["MIN", "PKT", "REB", "AST", "+/-"];
   return (
     <>
       <View style={s.chips}>
         <Chip
-          label={home.name}
-          active={side === 0}
-          onPress={() => setSide(0)}
+          label={game.home.shortName}
+          active={side === "home"}
+          onPress={() => setSide("home")}
         />
         <Chip
-          label={away.name}
-          active={side === 1}
-          onPress={() => setSide(1)}
+          label={game.away.shortName}
+          active={side === "away"}
+          onPress={() => setSide("away")}
         />
       </View>
       <View style={s.box}>
@@ -224,14 +239,28 @@ function Box({ game, home, away }: { game: Game; home: Team; away: Team }) {
           ))}
         </View>
         {rows.map((r) => (
-          <View key={r.player.number} style={s.boxRow}>
-            <Text numberOfLines={1} style={s.boxName}>
-              {r.player.number} {r.player.name}
+          <View key={`${r.number}-${r.name}`} style={s.boxRow}>
+            <Text numberOfLines={1} style={[s.boxName, !r.minutes && s.dnp]}>
+              {r.number} {r.name}
+              {r.starter ? <Text style={s.starter}> S</Text> : null}
             </Text>
-            <Num style={s.boxCell}>{r.minutes}</Num>
-            <Num style={[s.boxCell, r.points === max && s.hi]}>{r.points}</Num>
-            <Num style={s.boxCell}>{r.rebounds}</Num>
-            <Num style={s.boxCell}>{r.assists}</Num>
+            {r.minutes ? (
+              <>
+                <Num style={s.boxCell}>{r.minutes.split(":")[0]}</Num>
+                <Num style={[s.boxCell, r.points === max && s.hi]}>
+                  {r.points}
+                </Num>
+                <Num style={s.boxCell}>{r.rebounds}</Num>
+                <Num style={s.boxCell}>{r.assists}</Num>
+                <Num style={s.boxCell}>
+                  {r.plusMinus > 0 ? `+${r.plusMinus}` : r.plusMinus}
+                </Num>
+              </>
+            ) : (
+              <Text style={[s.boxCell, s.dnp, { width: 200 }]}>
+                nicht eingesetzt
+              </Text>
+            )}
           </View>
         ))}
       </View>
@@ -239,42 +268,86 @@ function Box({ game, home, away }: { game: Game; home: Team; away: Team }) {
   );
 }
 
-function Preview({ home, away }: { home: Team; away: Team }) {
+function Plays({
+  game,
+  plays,
+}: {
+  game: ApiGame;
+  plays: ApiGameDetail["plays"];
+}) {
+  if (!plays.length) return <Empty>Noch keine Spielzüge.</Empty>;
+  return (
+    <View style={s.pbp}>
+      {plays.slice(0, 80).map((p) => (
+        <View key={p.id} style={s.play}>
+          <Num style={s.playTime}>
+            {p.period > 4 ? "OT" : `Q${p.period}`}
+            {"\n"}
+            {p.clock}
+          </Num>
+          <View style={s.playMid}>
+            {p.side ? (
+              <TeamBadge team={p.side === "home" ? game.home : game.away} />
+            ) : (
+              <View style={{ width: 28 }} />
+            )}
+            <View style={{ flex: 1 }}>
+              <Text style={[s.playText, p.score && s.playScored]}>
+                {p.text}
+              </Text>
+              {p.player ? <Text style={s.pSub}>{p.player}</Text> : null}
+            </View>
+          </View>
+          {p.score ? (
+            <Num style={s.playScore}>
+              {p.score[0]}–{p.score[1]}
+            </Num>
+          ) : null}
+        </View>
+      ))}
+    </View>
+  );
+}
+
+function Preview({ game }: { game: ApiGame }) {
+  const { data } = useStandings();
+  const row = (code: string): ApiStanding | undefined =>
+    data?.rows.find((r) => r.team.code === code);
+  const h = row(game.home.code);
+  const a = row(game.away.code);
+  const perGame = (r: ApiStanding, v: number) =>
+    +(v / Math.max(1, r.wins + r.losses)).toFixed(1);
   return (
     <>
       <SectionHeader title="Saisonbilanz" />
-      <View style={s.cmp}>
-        <CompareRow label="Siege" home={home.wins} away={away.wins} />
-        <CompareRow
-          label="Punkte pro Spiel"
-          home={+(home.pointsFor / 12).toFixed(1)}
-          away={+(away.pointsFor / 12).toFixed(1)}
-        />
-        <CompareRow
-          label="Gegnerpunkte pro Spiel"
-          home={+(home.pointsAgainst / 12).toFixed(1)}
-          away={+(away.pointsAgainst / 12).toFixed(1)}
-          lowerIsBetter
-        />
-      </View>
-      <SectionHeader title="Topscorer" />
-      <View style={s.list}>
-        {[home, away].map((t) => (
-          <View key={t.id} style={s.player}>
-            <Num style={s.jersey}>{t.roster[0].number}</Num>
-            <View style={{ flex: 1 }}>
-              <Text style={s.pName}>{t.roster[0].name}</Text>
-              <Text style={s.pSub}>
-                {t.name} · {t.roster[0].position}
-              </Text>
-            </View>
-            <Num style={s.pPts}>
-              {t.roster[0].pointsPerGame}
-              <Text style={s.pSub}> PPG</Text>
-            </Num>
-          </View>
-        ))}
-      </View>
+      {h && a ? (
+        <View style={s.cmp}>
+          <CompareRow label="Siege" home={h.wins} away={a.wins} />
+          <CompareRow
+            label="Punkte pro Spiel"
+            home={perGame(h, h.pointsFor)}
+            away={perGame(a, a.pointsFor)}
+          />
+          <CompareRow
+            label="Gegnerpunkte pro Spiel"
+            home={perGame(h, h.pointsAgainst)}
+            away={perGame(a, a.pointsAgainst)}
+            lowerIsBetter
+          />
+          <CompareRow
+            label="Tabellenplatz"
+            home={h.position}
+            away={a.position}
+            lowerIsBetter
+          />
+        </View>
+      ) : (
+        <Empty>Die Bilanz wird geladen.</Empty>
+      )}
+      <Text style={s.note}>
+        Live-Spielstand, Boxscore und Play-by-Play erscheinen hier, sobald das
+        Spiel beginnt.
+      </Text>
     </>
   );
 }
@@ -314,6 +387,13 @@ const s = StyleSheet.create({
   qfirst: { textAlign: "left" },
   qhead: { fontFamily: fonts.bodyBold, fontSize: 11, color: colors.muted },
   qtotal: { fontFamily: fonts.bodyBold },
+  venue: {
+    fontFamily: fonts.body,
+    fontSize: 11,
+    color: colors.muted,
+    textAlign: "center",
+    marginTop: space.sm,
+  },
   cmp: { paddingHorizontal: space.lg, gap: space.md },
   list: { paddingHorizontal: space.lg },
   player: {
@@ -365,12 +445,14 @@ const s = StyleSheet.create({
     paddingRight: 6,
   },
   boxCell: {
-    width: 40,
+    width: 34,
     textAlign: "right",
     fontFamily: fonts.body,
     fontSize: 13,
   },
   boxHead: { fontFamily: fonts.bodyBold, fontSize: 11, color: colors.muted },
+  starter: { color: colors.ball, fontFamily: fonts.bodyBold, fontSize: 10 },
+  dnp: { color: colors.muted },
   hi: { color: colors.ball, fontFamily: fonts.bodyBold },
   pbp: { paddingHorizontal: space.lg, paddingTop: space.sm },
   play: {
@@ -388,11 +470,19 @@ const s = StyleSheet.create({
     color: colors.muted,
   },
   playMid: { flex: 1, flexDirection: "row", alignItems: "center", gap: 8 },
-  playText: {
-    flex: 1,
-    fontFamily: fonts.body,
-    fontSize: 13,
-    color: colors.text,
-  },
+  playText: { fontFamily: fonts.body, fontSize: 13, color: colors.text },
+  playScored: { fontFamily: fonts.bodyBold },
   playScore: { fontFamily: fonts.display, fontSize: 16 },
+  note: {
+    margin: space.lg,
+    padding: 14,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: colors.line,
+    color: colors.muted,
+    fontFamily: fonts.body,
+    fontSize: 12,
+    lineHeight: 18,
+  },
 });

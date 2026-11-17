@@ -2,7 +2,7 @@
 
 Euroleague-App für iOS und Android (Arbeitstitel „Hoopline“), gebaut mit Expo, React Native und TypeScript. Läuft zum Testen auch im Browser.
 
-> **Beispieldaten:** Alle Ergebnisse, Spieler und News in dieser Version sind erfunden. Teams werden mit Farbkürzeln statt Logos dargestellt, bis Lizenzen geklärt sind.
+> **Daten:** Spielplan, Live-Spielstände, Boxscores, Play-by-Play, Tabelle und Kader kommen echt und live von der Euroleague, über unseren eigenen Server in [`server/`](server/README.md). Diese Quelle ist nur für die Entwicklung gedacht und wird vor dem App-Store-Start durch einen lizenzierten Anbieter ersetzt. Die News sind noch Beispielartikel. Teams werden mit Farbkürzeln statt Logos dargestellt, bis Lizenzen geklärt sind.
 
 ## Screens
 
@@ -17,16 +17,27 @@ Euroleague-App für iOS und Android (Arbeitstitel „Hoopline“), gebaut mit Ex
 
 ## Starten
 
+Zuerst den Datenserver starten (siehe [`server/README.md`](server/README.md)):
+
+```bash
+cd server && npm install && npm run dev
+```
+
+Dann in einem zweiten Terminal die App:
+
 ```bash
 npm install
 npx expo start        # QR-Code mit der Expo-Go-App scannen
 npx expo start --web  # im Browser
 ```
 
+Ohne laufenden Server zeigt die App „Keine Verbindung zum Server“. Die Adresse des Servers stellt man mit `EXPO_PUBLIC_API_URL` ein.
+
 ## Prüfen
 
 ```bash
 npm run typecheck
+cd server && npm test && npm run typecheck
 ```
 
 ## Aufbau
@@ -40,17 +51,23 @@ src/
     article/[id]  Artikel
   components/     Wiederverwendbare Bausteine (Spielkarte, Team-Badge, ...)
   data/
-    types.ts      Datenmodell
-    mock.ts       Beispieldaten
-    store.ts      Zustand, Live-Simulation, Favoriten
+    api.ts        Laden vom Server, automatische Aktualisierung bei Live-Spielen
+    prefs.ts      Favoriten und Push-Einstellungen (auf dem Gerät gespeichert)
+    clubs.ts      Badge-Farben pro Club
+    news.ts       Beispielartikel
+  lib/format.ts   Datum und Uhrzeit
   theme.ts        Farben, Schriften, Abstände
+shared/api.ts     Datenformat zwischen Server und App
+server/           Cloudflare Worker mit Zwischenspeicher
 ```
 
-Die Screens greifen nur über `src/data/store.ts` auf Daten zu. Für echte Daten wird später `mock.ts` durch einen lizenzierten Anbieter ersetzt.
+Die App spricht nur mit unserem eigenen Server. Ein Wechsel des Datenanbieters betrifft daher nur `server/`.
 
 ## Nächste Schritte
 
-- Datenanbieter mit Lizenz für App-Store-Veröffentlichung auswählen
+- Server bei Cloudflare veröffentlichen (kostenlos)
+- Vor dem App-Store-Start: lizenzierten Datenanbieter anbinden oder Erlaubnis der Euroleague einholen
+- Echte News-Quelle
 - Push-Benachrichtigungen (expo-notifications)
 - App-Icon, Splash-Screen und endgültiger Name
 - Build und Veröffentlichung über EAS

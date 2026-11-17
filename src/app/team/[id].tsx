@@ -2,43 +2,62 @@ import { Stack, useLocalSearchParams } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { GameCard } from "@/components/game-card";
+import { LoadState } from "@/components/load-state";
 import { Empty, Num, SectionHeader, TeamBadge } from "@/components/ui";
-import {
-  allTeams,
-  standings,
-  toggleFavorite,
-  useFavorites,
-  useGames,
-} from "@/data/store";
+import { useGames, useRoster, useStandings } from "@/data/api";
+import { clubColors } from "@/data/clubs";
+import { toggleFavorite, useFavorites } from "@/data/prefs";
 import { colors, fonts, radius, space } from "@/theme";
 
 export default function TeamScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const favs = useFavorites();
-  const games = useGames().filter((g) => g.home === id || g.away === id);
-  const team = allTeams().find((t) => t.id === id);
-  if (!team) return <Empty>Team nicht gefunden.</Empty>;
-  const rank = standings().indexOf(team) + 1;
-  const following = favs.includes(team.id);
+  const roster = useRoster(id);
+  const standings = useStandings();
+  const games = useGames();
+
+  const row = standings.data?.rows.find((r) => r.team.code === id);
+  const team = roster.data?.team ?? row?.team;
+  if (!team)
+    return (
+      <LoadState
+        error={roster.error ?? standings.error}
+        onRetry={roster.refresh}
+      />
+    );
+
+  const following = favs.includes(team.code);
+  const [c1, c2] = clubColors(team.code);
+  const teamGames = (games.data ?? []).filter(
+    (g) => g.home.code === team.code || g.away.code === team.code,
+  );
+  const lastIdx = teamGames
+    .map((g) => g.status !== "scheduled")
+    .lastIndexOf(true);
+  const recent = teamGames.slice(Math.max(0, lastIdx - 1), lastIdx + 1);
+  const upcoming = teamGames.slice(lastIdx + 1, lastIdx + 4);
+  const played = row ? row.wins + row.losses : 0;
 
   return (
     <>
-      <Stack.Screen options={{ title: team.name }} />
+      <Stack.Screen options={{ title: team.shortName }} />
       <ScrollView contentContainerStyle={{ paddingBottom: space.xl }}>
-        <View style={[s.hero, { backgroundColor: team.colors[0] }]}>
-          <View style={[s.heroHalf, { backgroundColor: team.colors[1] }]} />
+        <View style={[s.hero, { backgroundColor: c1 }]}>
+          <View style={[s.heroHalf, { backgroundColor: c2 }]} />
           <View style={s.heroShade} />
           <TeamBadge team={team} size={72} />
           <View style={{ flex: 1, minWidth: 0 }}>
-            <Text style={s.heroName}>{team.name}</Text>
+            <Text style={s.heroName}>{team.shortName}</Text>
             <Num style={s.heroSub}>
-              {team.wins}–{team.losses} · Platz {rank} · {team.city}
+              {row
+                ? `${row.wins}–${row.losses} · Platz ${row.position}`
+                : team.name}
             </Num>
           </View>
           <Pressable
             accessibilityRole="button"
             accessibilityState={{ selected: following }}
-            onPress={() => toggleFavorite(team.id)}
+            onPress={() => toggleFavorite(team.code)}
             style={[s.follow, following && s.followOn]}
           >
             <Text style={[s.followText, following && { color: "#111" }]}>
@@ -47,41 +66,76 @@ export default function TeamScreen() {
           </Pressable>
         </View>
 
-        <View style={s.stats}>
-          <Stat value={(team.pointsFor / 12).toFixed(1)} label="Punkte/Spiel" />
-          <Stat
-            value={(team.pointsAgainst / 12).toFixed(1)}
-            label="Gegner/Spiel"
-          />
-          <Stat
-            value={`${team.form.filter(Boolean).length}/5`}
-            label="Letzte 5"
-          />
-        </View>
+        {row && played > 0 && (
+          <View style={s.stats}>
+            <Stat
+              value={(row.pointsFor / played).toFixed(1)}
+              label="Punkte/Spiel"
+            />
+            <Stat
+              value={(row.pointsAgainst / played).toFixed(1)}
+              label="Gegner/Spiel"
+            />
+            <Stat
+              value={`${row.form.filter(Boolean).length}/${row.form.length}`}
+              label="Letzte 5"
+            />
+          </View>
+        )}
 
-        <SectionHeader title="Spiele" />
-        <View style={s.games}>
-          {games.length ? (
-            games.map((g) => <GameCard key={g.id} game={g} />)
-          ) : (
-            <Empty>Diese Woche spielfrei.</Empty>
-          )}
-        </View>
-
-        <SectionHeader title="Kader" right="PPG" />
-        <View style={s.list}>
-          {team.roster.map((p) => (
-            <View key={p.number} style={s.player}>
-              <Num style={s.jersey}>{p.number}</Num>
-              <View style={{ flex: 1 }}>
-                <Text style={s.pName}>{p.name}</Text>
-                <Text style={s.pSub}>
-                  {p.position} · {p.heightCm} cm
-                </Text>
-              </View>
-              <Num style={s.pPts}>{p.pointsPerGame}</Num>
+        {recent.length > 0 && (
+          <>
+            <SectionHeader title="Letzte Spiele" />
+            <View style={s.games}>
+              {recent.map((g) => (
+                <GameCard key={g.code} game={g} />
+              ))}
             </View>
-          ))}
+          </>
+        )}
+        {upcoming.length > 0 && (
+          <>
+            <SectionHeader title="Nächste Spiele" />
+            <View style={s.games}>
+              {upcoming.map((g) => (
+                <GameCard key={g.code} game={g} />
+              ))}
+            </View>
+          </>
+        )}
+
+        <SectionHeader
+          title="Kader"
+          right={
+            roster.data?.coach ? `Trainer: ${roster.data.coach}` : undefined
+          }
+        />
+        <View style={s.list}>
+          {!roster.data ? (
+            roster.error ? (
+              <Empty>{roster.error}</Empty>
+            ) : (
+              <Empty>Kader wird geladen …</Empty>
+            )
+          ) : (
+            roster.data.players.map((p) => (
+              <View key={`${p.number}-${p.name}`} style={s.player}>
+                <Num style={s.jersey}>{p.number}</Num>
+                <View style={{ flex: 1 }}>
+                  <Text style={s.pName}>{p.name}</Text>
+                  <Text style={s.pSub}>
+                    {[
+                      p.position,
+                      p.heightCm ? `${p.heightCm} cm` : null,
+                      p.country,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </Text>
+                </View>
+              </View>
+            ))
+          )}
         </View>
       </ScrollView>
     </>
@@ -177,5 +231,4 @@ const s = StyleSheet.create({
   },
   pName: { fontFamily: fonts.bodyMedium, fontSize: 14, color: colors.text },
   pSub: { fontFamily: fonts.body, fontSize: 12, color: colors.muted },
-  pPts: { fontFamily: fonts.display, fontSize: 18 },
 });
