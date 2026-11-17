@@ -31,7 +31,7 @@ npx expo start        # QR-Code mit der Expo-Go-App scannen
 npx expo start --web  # im Browser
 ```
 
-Ohne laufenden Server zeigt die App „Keine Verbindung zum Server“. Die Adresse des Servers stellt man mit `EXPO_PUBLIC_API_URL` ein.
+Die App nutzt den veröffentlichten Server `https://hoopline-api.94-dino.workers.dev`. Für einen lokalen Server setzt man `EXPO_PUBLIC_API_URL`, z. B. `EXPO_PUBLIC_API_URL=http://localhost:8787`.
 
 ## Prüfen
 
