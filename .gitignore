@@ -41,3 +41,7 @@ example
 # generated native folders
 /ios
 /android
+
+# Cloudflare Worker
+server/.wrangler/
+server/node_modules/

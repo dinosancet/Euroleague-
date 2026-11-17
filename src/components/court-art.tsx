@@ -1,6 +1,6 @@
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
-import { teamById } from "@/data/store";
+import { clubColors } from "@/data/clubs";
 import { colors } from "@/theme";
 
 /**
@@ -14,11 +14,11 @@ export function CourtArt({
   teams: string[];
   style?: ViewStyle;
 }) {
-  const a = teamById(teams[0]);
-  const b = teams[1] ? teamById(teams[1]) : a;
+  const a = clubColors(teams[0]);
+  const b = teams[1] ? clubColors(teams[1]) : a;
   return (
-    <View style={[st.wrap, { backgroundColor: a.colors[0] }, style]}>
-      <View style={[st.half, { backgroundColor: b.colors[1] }]} />
+    <View style={[st.wrap, { backgroundColor: a[0] }, style]}>
+      <View style={[st.half, { backgroundColor: b[1] }]} />
       <View style={st.shade} />
       <View style={st.midline} />
       <View style={st.circle} />

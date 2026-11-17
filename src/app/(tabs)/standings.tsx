@@ -1,73 +1,111 @@
 import { router } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
+import { LoadState } from "@/components/load-state";
 import { Num, SectionHeader, TeamBadge } from "@/components/ui";
-import { standings, useFavorites } from "@/data/store";
+import { useStandings } from "@/data/api";
+import { useFavorites } from "@/data/prefs";
 import { colors, fonts, space } from "@/theme";
 
 export default function StandingsScreen() {
   const favs = useFavorites();
-  const table = standings();
+  const { data, error, loading, refresh } = useStandings();
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: space.xl }}>
-      <SectionHeader title="Hauptrunde 2026/27" right="nach 12 Spielen" />
-      <View style={s.table}>
-        <View style={[s.row, s.head]}>
-          <Text style={[s.th, s.rank]} />
-          <Text style={[s.th, s.team]}>Team</Text>
-          <Text style={[s.th, s.col]}>S</Text>
-          <Text style={[s.th, s.col]}>N</Text>
-          <Text style={[s.th, s.diff]}>+/-</Text>
-          <Text style={[s.th, s.form]}>Form</Text>
-        </View>
-        {table.map((t, i) => {
-          const zone =
-            i < 6 ? colors.win : i < 10 ? colors.ball : "transparent";
-          const diff = t.pointsFor - t.pointsAgainst;
-          return (
-            <Pressable
-              key={t.id}
-              accessibilityRole="link"
-              onPress={() =>
-                router.push({ pathname: "/team/[id]", params: { id: t.id } })
-              }
-              style={[
-                s.row,
-                favs.includes(t.id) && { backgroundColor: colors.ballSoft },
-              ]}
-            >
-              <Num style={[s.rank, s.rankText, { borderLeftColor: zone }]}>
-                {i + 1}
-              </Num>
-              <View style={[s.team, s.teamCell]}>
-                <TeamBadge team={t} />
-                <Text numberOfLines={1} style={s.teamName}>
-                  {t.name}
-                </Text>
-              </View>
-              <Num style={[s.col, s.td]}>{t.wins}</Num>
-              <Num style={[s.col, s.td]}>{t.losses}</Num>
-              <Num style={[s.diff, s.td]}>{diff > 0 ? `+${diff}` : diff}</Num>
-              <View style={[s.form, s.formBars]}>
-                {t.form.map((w, k) => (
-                  <View
-                    key={k}
-                    style={[
-                      s.formBar,
-                      { backgroundColor: w ? colors.win : colors.line },
-                    ]}
-                  />
-                ))}
-              </View>
-            </Pressable>
-          );
-        })}
-      </View>
-      <View style={s.legend}>
-        <Legend color={colors.win} label="Playoffs (1–6)" />
-        <Legend color={colors.ball} label="Play-In (7–10)" />
-      </View>
+    <ScrollView
+      contentContainerStyle={{ paddingBottom: space.xl }}
+      refreshControl={
+        <RefreshControl
+          refreshing={loading && !!data}
+          onRefresh={refresh}
+          tintColor={colors.ball}
+        />
+      }
+    >
+      {!data ? (
+        <LoadState error={error} onRetry={refresh} />
+      ) : (
+        <>
+          <SectionHeader
+            title="Hauptrunde 2026/27"
+            right={`nach Runde ${data.round}`}
+          />
+          <View style={s.table}>
+            <View style={[s.row, s.head]}>
+              <Text style={[s.th, s.rank]} />
+              <Text style={[s.th, s.team]}>Team</Text>
+              <Text style={[s.th, s.col]}>S</Text>
+              <Text style={[s.th, s.col]}>N</Text>
+              <Text style={[s.th, s.diff]}>+/-</Text>
+              <Text style={[s.th, s.form]}>Form</Text>
+            </View>
+            {data.rows.map((r) => {
+              const zone =
+                r.position <= 6
+                  ? colors.win
+                  : r.position <= 10
+                    ? colors.ball
+                    : "transparent";
+              const diff = r.pointsFor - r.pointsAgainst;
+              return (
+                <Pressable
+                  key={r.team.code}
+                  accessibilityRole="link"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/team/[id]",
+                      params: { id: r.team.code },
+                    })
+                  }
+                  style={[
+                    s.row,
+                    favs.includes(r.team.code) && {
+                      backgroundColor: colors.ballSoft,
+                    },
+                  ]}
+                >
+                  <Num style={[s.rank, s.rankText, { borderLeftColor: zone }]}>
+                    {r.position}
+                  </Num>
+                  <View style={[s.team, s.teamCell]}>
+                    <TeamBadge team={r.team} />
+                    <Text numberOfLines={1} style={s.teamName}>
+                      {r.team.shortName}
+                    </Text>
+                  </View>
+                  <Num style={[s.col, s.td]}>{r.wins}</Num>
+                  <Num style={[s.col, s.td]}>{r.losses}</Num>
+                  <Num style={[s.diff, s.td]}>
+                    {diff > 0 ? `+${diff}` : diff}
+                  </Num>
+                  <View style={[s.form, s.formBars]}>
+                    {r.form.map((w, k) => (
+                      <View
+                        key={k}
+                        style={[
+                          s.formBar,
+                          { backgroundColor: w ? colors.win : colors.line },
+                        ]}
+                      />
+                    ))}
+                  </View>
+                </Pressable>
+              );
+            })}
+          </View>
+          <View style={s.legend}>
+            <Legend color={colors.win} label="Playoffs (1–6)" />
+            <Legend color={colors.ball} label="Play-In (7–10)" />
+          </View>
+        </>
+      )}
     </ScrollView>
   );
 }

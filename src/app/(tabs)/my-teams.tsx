@@ -8,14 +8,15 @@ import {
 } from "react-native";
 
 import { SectionHeader, TeamBadge } from "@/components/ui";
+import { LoadState } from "@/components/load-state";
+import { useStandings } from "@/data/api";
 import {
-  allTeams,
   toggleFavorite,
   togglePush,
   useFavorites,
   usePush,
   type PushSettings,
-} from "@/data/store";
+} from "@/data/prefs";
 import { colors, fonts, radius, space } from "@/theme";
 
 const PUSH: [keyof PushSettings, string, string][] = [
@@ -27,6 +28,10 @@ const PUSH: [keyof PushSettings, string, string][] = [
 export default function MyTeamsScreen() {
   const favs = useFavorites();
   const push = usePush();
+  const { data, error, refresh } = useStandings();
+  const teams = (data?.rows ?? [])
+    .map((r) => r.team)
+    .sort((a, b) => a.shortName.localeCompare(b.shortName));
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: space.xl }}>
@@ -34,20 +39,21 @@ export default function MyTeamsScreen() {
         title="Teams, denen du folgst"
         right={`${favs.length} gewählt`}
       />
+      {!data && <LoadState error={error} onRetry={refresh} />}
       <View style={s.grid}>
-        {allTeams().map((t) => {
-          const on = favs.includes(t.id);
+        {teams.map((t) => {
+          const on = favs.includes(t.code);
           return (
             <Pressable
-              key={t.id}
+              key={t.code}
               accessibilityRole="checkbox"
               accessibilityState={{ checked: on }}
-              onPress={() => toggleFavorite(t.id)}
+              onPress={() => toggleFavorite(t.code)}
               style={[s.team, on && s.teamOn]}
             >
               <TeamBadge team={t} />
               <Text numberOfLines={1} style={s.teamName}>
-                {t.name}
+                {t.shortName}
               </Text>
               <View style={[s.check, on && s.checkOn]}>
                 {on ? <Text style={s.checkMark}>✓</Text> : null}
