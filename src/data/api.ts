@@ -12,9 +12,14 @@ import type {
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { AppState } from "react-native";
 
-/** Set EXPO_PUBLIC_API_URL to the deployed worker; local `npm run dev` in server/ by default. */
+/**
+ * The published Hoopline server on Cloudflare. To test against a local server
+ * (`npm run dev` in server/), set EXPO_PUBLIC_API_URL=http://localhost:8787.
+ */
+const DEFAULT_API_URL = "https://hoopline-api.94-dino.workers.dev";
+
 export const API_URL = (
-  process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:8787"
+  process.env.EXPO_PUBLIC_API_URL ?? DEFAULT_API_URL
 ).replace(/\/+$/, "");
 
 interface Entry<T> {

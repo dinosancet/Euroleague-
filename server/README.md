@@ -21,7 +21,7 @@ npm install
 npm run dev          # http://localhost:8787
 ```
 
-Die App nutzt standardmäßig `http://localhost:8787`. Auf einem echten Handy im selben WLAN stattdessen die IP des Computers eintragen, z. B. `EXPO_PUBLIC_API_URL=http://192.168.0.10:8787 npx expo start`.
+Die App nutzt standardmäßig den veröffentlichten Server. Für den lokalen Server `EXPO_PUBLIC_API_URL=http://localhost:8787 npx expo start` (auf einem echten Handy im selben WLAN die IP des Computers statt `localhost`).
 
 ## Tests
 
@@ -39,7 +39,7 @@ Automatisch über GitHub Actions (`.github/workflows/deploy-server.yml`): Jede �
 3. Unter _My Profile → API Tokens → Create Token_ die Vorlage **Edit Cloudflare Workers** nehmen und den Token erstellen.
 4. Im GitHub-Repo unter _Settings → Secrets and variables → Actions_ zwei Secrets anlegen: `CLOUDFLARE_API_TOKEN` (der Token) und `CLOUDFLARE_ACCOUNT_ID` (steht rechts auf der Workers-Übersicht).
 5. Unter _Actions → Server veröffentlichen → Run workflow_ starten. Die Adresse steht am Ende des Logs, z. B. `https://hoopline-api.<name>.workers.dev`.
-6. Diese Adresse in der App als `EXPO_PUBLIC_API_URL` setzen.
+6. Diese Adresse steht in `src/data/api.ts` als `DEFAULT_API_URL` (aktuell `https://hoopline-api.94-dino.workers.dev`).
 
 Von Hand geht es auch: `npx wrangler login`, dann `npm run deploy`.
 
