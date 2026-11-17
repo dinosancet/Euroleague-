@@ -18,6 +18,7 @@ import {
 
 import { LoadState } from "@/components/load-state";
 import {
+  col,
   STAT_COLUMNS,
   StatLegend,
   StatTable,
@@ -283,78 +284,78 @@ function OnCourt({
   );
 }
 
+/** "Sterling Brown" -> "S. Brown" */
+const shortName = (name: string) => {
+  const parts = name.split(" ");
+  return parts.length > 1
+    ? `${parts[0][0]}. ${parts.slice(1).join(" ")}`
+    : name;
+};
+
 function Box({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
   const [side, setSide] = useState<"home" | "away">("home");
   if (!box) return <Empty>Der Boxscore ist noch nicht verfügbar.</Empty>;
   const lines = box[side];
   const live = game.status === "live";
-  const best = (pick: (l: ApiPlayerLine) => number) =>
-    Math.max(...lines.filter((l) => l.minutes).map(pick), 1);
-  const top = {
-    points: best((l) => l.points),
-    rebounds: best((l) => l.rebounds),
-    assists: best((l) => l.assists),
-    pir: best((l) => l.pir),
-  };
-  const columns = [{ label: "MIN", width: 44 }, ...STAT_COLUMNS];
+  const columns = [{ label: "MIN", width: 52 }, ...STAT_COLUMNS];
+  const topPts = Math.max(...lines.map((l) => l.points), 1);
+
+  const row = (r: ApiPlayerLine) => ({
+    key: `${r.id}-${r.number}-${r.name}`,
+    onPress: r.id ? () => openPlayer(r.id) : undefined,
+    accessibilityLabel: `Spielerseite ${r.name}`,
+    left: (
+      <View style={s.boxLeft}>
+        <Text numberOfLines={1} style={[s.boxName, !r.minutes && s.dnp]}>
+          {shortName(r.name)}
+          {r.position ? <Text style={s.boxPos}> {r.position}</Text> : null}
+        </Text>
+        {live && r.onCourt ? <View style={s.onDot} /> : null}
+      </View>
+    ),
+    cells: [r.minutes, ...statCells(r)],
+    highlight: r.points === topPts ? [col("PKT", 1)] : [],
+    note: r.minutes ? undefined : "nicht eingesetzt",
+  });
+
   return (
     <>
-      <View style={s.chips}>
-        <Chip
-          label={game.home.shortName}
-          active={side === "home"}
-          onPress={() => setSide("home")}
-        />
-        <Chip
-          label={game.away.shortName}
-          active={side === "away"}
-          onPress={() => setSide("away")}
+      <View style={{ marginTop: space.md }}>
+        <Segmented
+          value={side}
+          onChange={setSide}
+          options={[
+            ["home", game.home.shortName],
+            ["away", game.away.shortName],
+          ]}
         />
       </View>
-      <View style={{ paddingHorizontal: space.lg }}>
+      <View style={{ marginTop: space.md }}>
         <StatTable
-          leftLabel="Spieler"
+          flush
+          leftWidth={158}
           columns={columns}
-          rows={[
-            ...lines.map((r) => ({
-              key: `${r.id}-${r.number}-${r.name}`,
-              onPress: r.id ? () => openPlayer(r.id) : undefined,
-              accessibilityLabel: `Spielerseite ${r.name}`,
-              left: (
-                <View style={s.boxLeft}>
-                  <Num style={s.boxNo}>{r.number}</Num>
-                  <Text
-                    numberOfLines={1}
-                    style={[s.boxName, !r.minutes && s.dnp]}
-                  >
-                    {r.name.split(" ").slice(-1)[0]}
-                    {r.starter ? <Text style={s.starter}> S</Text> : null}
-                  </Text>
-                  {live && r.onCourt ? <View style={s.onDot} /> : null}
-                </View>
-              ),
-              cells: [r.minutes, ...statCells(r)],
-              highlight: [
-                r.points === top.points ? 1 : -1,
-                r.rebounds === top.rebounds ? 7 : -1,
-                r.assists === top.assists ? 8 : -1,
-                r.pir === top.pir ? 14 : -1,
-              ],
-              note: r.minutes ? undefined : "nicht eingesetzt",
-            })),
+          sections={[
+            { title: "Starter", rows: lines.filter((l) => l.starter).map(row) },
+            { title: "Bank", rows: lines.filter((l) => !l.starter).map(row) },
+          ]}
+          footer={[
             {
               key: "total",
-              style: "total" as const,
-              left: <Text style={[s.boxName, s.boxTotal]}>Team gesamt</Text>,
+              style: "total",
+              left: <Text style={s.boxTotal}>GESAMT</Text>,
+              // Plus-minus makes no sense for a team total.
               cells: ["", ...statCells(box.totals[side])].map((c, i) =>
-                i === 13 ? "" : c,
+                i === col("+/-", 1) ? "" : c,
               ),
             },
           ]}
         />
+      </View>
+      <View style={{ paddingHorizontal: space.lg }}>
         <Text style={s.boxHint}>
-          {live ? "● = auf dem Feld · " : ""}S = Starter · Seitlich wischen für
-          alle Werte, Spieler antippen für die Spielerseite.
+          {live ? "● = gerade auf dem Feld · " : ""}Seitlich wischen für alle
+          Werte, Spieler antippen für die Spielerseite.
         </Text>
         <StatLegend />
       </View>
@@ -523,22 +524,23 @@ const s = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    paddingLeft: 10,
-    paddingRight: 4,
-  },
-  boxNo: {
-    width: 22,
-    fontFamily: fonts.bodyBold,
-    fontSize: 12,
-    color: colors.muted,
+    paddingLeft: space.lg,
+    paddingRight: 6,
   },
   boxName: {
     flexShrink: 1,
-    fontFamily: fonts.bodyMedium,
-    fontSize: 13,
+    fontFamily: fonts.body,
+    fontSize: 14,
     color: colors.text,
   },
-  boxTotal: { paddingLeft: 10, fontFamily: fonts.bodyBold },
+  boxPos: { fontFamily: fonts.body, fontSize: 13, color: colors.muted },
+  boxTotal: {
+    paddingLeft: space.lg,
+    fontFamily: fonts.bodyBold,
+    fontSize: 13,
+    letterSpacing: 0.5,
+    color: colors.text,
+  },
   boxHint: {
     fontFamily: fonts.body,
     fontSize: 11,
@@ -593,7 +595,6 @@ const s = StyleSheet.create({
     color: colors.text,
   },
   courtPts: { fontFamily: fonts.bodyBold, fontSize: 13 },
-  starter: { color: colors.ball, fontFamily: fonts.bodyBold, fontSize: 10 },
   dnp: { color: colors.muted },
   pbp: { paddingHorizontal: space.lg, paddingTop: space.sm },
   play: {

@@ -321,6 +321,7 @@ function toLine(p: ElBoxPlayer, live: boolean): ApiPlayerLine {
     number: p.Dorsal,
     name: formatName(p.Player),
     starter: p.IsStarter === 1,
+    position: "",
     onCourt: live && p.IsPlaying === 1,
     minutes: played ? p.Minutes : "",
     ...boxStats(p),
@@ -338,6 +339,22 @@ export function toBox(
     away: away.PlayersStats.map((p) => toLine(p, live)),
     totals: { home: boxStats(home.totr), away: boxStats(away.totr) },
   };
+}
+
+/** "Guard" -> "G", "Forward" -> "F", "Center" -> "C". */
+export const shortPosition = (pos: string | null | undefined) =>
+  (pos ?? "").trim().charAt(0).toUpperCase();
+
+/** Fills in each player's position from the club rosters (keyed by person code). */
+export function withPositions(
+  box: NonNullable<ApiGameDetail["box"]>,
+  positions: Map<string, string>,
+): NonNullable<ApiGameDetail["box"]> {
+  const fill = (l: ApiPlayerLine) => ({
+    ...l,
+    position: shortPosition(positions.get(l.id)),
+  });
+  return { ...box, home: box.home.map(fill), away: box.away.map(fill) };
 }
 
 /* ---------- play-by-play ---------- */

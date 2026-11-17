@@ -229,35 +229,39 @@ function GameLog({ p }: { p: ApiPlayerProfile }) {
   return (
     <View style={{ paddingHorizontal: space.lg }}>
       <StatTable
-        leftLabel="Gegner"
         leftWidth={136}
         columns={columns}
-        rows={[
-          ...p.games.map((g) => ({
-            key: String(g.code),
-            onPress: () => openGame(g.code),
-            accessibilityLabel: `Spiel gegen ${g.opponent.name}`,
-            left: (
-              <View style={s.logLeft}>
-                <TeamBadge team={g.opponent} size={20} />
-                <View style={{ flex: 1, minWidth: 0 }}>
-                  <Text style={s.logOpp} numberOfLines={1}>
-                    {g.atHome ? "vs" : "@"} {g.opponent.abbr}
-                  </Text>
-                  <Text style={s.logDate}>{formatDay(g.startUtc)}</Text>
+        sections={[
+          {
+            title: "Gegner",
+            rows: p.games.map((g) => ({
+              key: String(g.code),
+              onPress: () => openGame(g.code),
+              accessibilityLabel: `Spiel gegen ${g.opponent.name}`,
+              left: (
+                <View style={s.logLeft}>
+                  <TeamBadge team={g.opponent} size={20} />
+                  <View style={{ flex: 1, minWidth: 0 }}>
+                    <Text style={s.logOpp} numberOfLines={1}>
+                      {g.atHome ? "vs" : "@"} {g.opponent.abbr}
+                    </Text>
+                    <Text style={s.logDate}>{formatDay(g.startUtc)}</Text>
+                  </View>
+                  <Num
+                    style={[
+                      s.logRes,
+                      { color: g.won ? colors.win : colors.live },
+                    ]}
+                  >
+                    {g.score[0]}:{g.score[1]}
+                  </Num>
                 </View>
-                <Num
-                  style={[
-                    s.logRes,
-                    { color: g.won ? colors.win : colors.live },
-                  ]}
-                >
-                  {g.score[0]}:{g.score[1]}
-                </Num>
-              </View>
-            ),
-            cells: [g.minutes, ...statCells(g.stats)],
-          })),
+              ),
+              cells: [g.minutes, ...statCells(g.stats)],
+            })),
+          },
+        ]}
+        footer={[
           ...(p.season
             ? [
                 {

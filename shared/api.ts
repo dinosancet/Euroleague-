@@ -67,6 +67,8 @@ export interface ApiPlayerLine extends ApiStatLine {
   number: string;
   name: string;
   starter: boolean;
+  /** Short position from the roster: "G", "F" or "C"; empty if unknown. */
+  position: string;
   /** On the court right now (only meaningful while the game is live). */
   onCourt: boolean;
   /** "mm:ss", empty when the player did not play. */

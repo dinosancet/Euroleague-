@@ -15,6 +15,7 @@ import {
   toProfile,
   toRoster,
   toStandings,
+  withPositions,
 } from "../src/normalize.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -172,4 +173,12 @@ test("player profile has info, season averages and newest game first", () => {
 test("roster players carry their id for the player page", () => {
   const r = toRoster(fixture("people"));
   assert.ok(r.players.every((p) => /^\d+$/.test(p.id)));
+});
+
+test("box score players get their short position from the roster", () => {
+  const box = toBox(fixture("live-boxscore"));
+  assert.ok(box);
+  const filled = withPositions(box, new Map([["011212", "Guard"]]));
+  assert.equal(filled.home.find((p) => p.id === "011212")?.position, "G");
+  assert.ok(filled.home.some((p) => p.position === ""));
 });

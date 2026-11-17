@@ -28,6 +28,7 @@ import {
   toProfile,
   toRoster,
   toStandings,
+  withPositions,
   toTeam,
   type ElBoxscore,
   type ElClub,
@@ -185,7 +186,24 @@ async function gameDetail(
       ),
     ).catch(() => []),
   ]);
-  return { game, box, plays };
+  return { game, box: box && (await addPositions(env, game, box)), plays };
+}
+
+/** Positions are not in the box score, so take them from the (long cached) rosters. */
+async function addPositions(
+  env: Env,
+  game: ApiGame,
+  box: NonNullable<ApiGameDetail["box"]>,
+) {
+  const rosters = await Promise.all(
+    [game.home.code, game.away.code].map((c) =>
+      roster(env, c).catch(() => null),
+    ),
+  );
+  const positions = new Map<string, string>();
+  for (const r of rosters)
+    for (const p of r?.players ?? []) positions.set(p.id, p.position);
+  return withPositions(box, positions);
 }
 
 async function standings(env: Env): Promise<ApiStandings> {
