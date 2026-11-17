@@ -1,167 +1,93 @@
-import { useMemo, useState } from "react";
-import {
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useState } from "react";
+import { RefreshControl, ScrollView, StyleSheet, Text } from "react-native";
 
-import { GameCard } from "@/components/game-card";
-import { LoadState } from "@/components/load-state";
-import { Empty, SectionHeader } from "@/components/ui";
-import { useGames } from "@/data/api";
-import { useFavorites } from "@/data/prefs";
-import { MONTHS, WEEKDAYS, localDayKey } from "@/lib/format";
-import { colors, fonts, radius, space } from "@/theme";
+import { GameStrip } from "@/components/game-strip";
+import { NewsCard } from "@/components/news-card";
+import { Chip, Empty } from "@/components/ui";
+import { load } from "@/data/api";
+import { NEWS } from "@/data/news";
+import { useFavorites, useLeague } from "@/data/prefs";
+import { colors, fonts, space } from "@/theme";
 
-const OFFSETS = [-3, -2, -1, 0, 1, 2, 3];
+type Feed = "foryou" | "top" | "transfers";
 
-export default function ScoresScreen() {
-  const [day, setDay] = useState(0);
-  const { data, error, loading, refresh } = useGames();
+const FEEDS: [Feed, string][] = [
+  ["foryou", "Für dich"],
+  ["top", "Top News"],
+  ["transfers", "Transfers"],
+];
+
+export default function HomeScreen() {
+  const [feed, setFeed] = useState<Feed>("foryou");
+  const [refreshing, setRefreshing] = useState(false);
   const favs = useFavorites();
+  const league = useLeague();
 
-  const days = useMemo(
-    () =>
-      OFFSETS.map((off) => {
-        const d = new Date();
-        d.setDate(d.getDate() + off);
-        return { off, date: d, key: localDayKey(d) };
-      }),
-    [],
-  );
-  const selected = days.find((d) => d.off === day)!;
-  const games = (data ?? []).filter(
-    (g) => localDayKey(new Date(g.startUtc)) === selected.key,
-  );
-  const daysWithGames = new Set(
-    (data ?? []).map((g) => localDayKey(new Date(g.startUtc))),
-  );
-  const mine = games.filter(
-    (g) => favs.includes(g.home.code) || favs.includes(g.away.code),
-  );
-  const rest = games.filter((g) => !mine.includes(g));
-  const next = (data ?? []).find(
-    (g) =>
-      g.status !== "final" && localDayKey(new Date(g.startUtc)) > selected.key,
-  );
+  const inLeague = NEWS.filter((n) => n.league === league);
+  const mine = (n: (typeof NEWS)[number]) =>
+    n.teams.some((t) => favs.includes(t));
+  const items =
+    feed === "top"
+      ? inLeague.filter((n) => n.top)
+      : feed === "transfers"
+        ? inLeague.filter((n) => n.kind === "transfer")
+        : // "Für dich": your teams first, then everything else, newest first within each.
+          [...inLeague].sort(
+            (a, b) => Number(mine(b)) - Number(mine(a)) || a.ageMin - b.ageMin,
+          );
+
+  const refresh = async () => {
+    setRefreshing(true);
+    await Promise.all([load("/v1/games"), load("/v1/standings")]);
+    setRefreshing(false);
+  };
 
   return (
     <ScrollView
-      contentContainerStyle={{ paddingBottom: space.xl }}
+      contentContainerStyle={{ paddingBottom: space.xl, gap: space.md }}
       refreshControl={
         <RefreshControl
-          refreshing={loading && !!data}
+          refreshing={refreshing}
           onRefresh={refresh}
           tintColor={colors.ball}
         />
       }
     >
+      <GameStrip />
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={s.dates}
+        contentContainerStyle={s.chips}
       >
-        {days.map(({ off, date, key }) => {
-          const active = off === day;
-          return (
-            <Pressable
-              key={off}
-              accessibilityRole="button"
-              accessibilityState={{ selected: active }}
-              onPress={() => setDay(off)}
-              style={[s.date, active && s.dateActive]}
-            >
-              <Text style={[s.dateSmall, active && s.onBall]}>
-                {off === 0 ? "Heute" : WEEKDAYS[date.getDay()]}
-              </Text>
-              <Text style={[s.dateBig, active && s.onBall]}>
-                {date.getDate()}
-              </Text>
-              <Text style={[s.dateSmall, active && s.onBall]}>
-                {MONTHS[date.getMonth()]}
-              </Text>
-              <View
-                style={[
-                  s.dot,
-                  daysWithGames.has(key) && {
-                    backgroundColor: active ? colors.onBall : colors.ball,
-                  },
-                ]}
-              />
-            </Pressable>
-          );
-        })}
+        {FEEDS.map(([k, label]) => (
+          <Chip
+            key={k}
+            label={label}
+            active={feed === k}
+            onPress={() => setFeed(k)}
+            large
+          />
+        ))}
       </ScrollView>
-
-      {!data ? (
-        <LoadState error={error} onRetry={refresh} />
-      ) : games.length === 0 ? (
-        <Empty>
-          Kein Euroleague-Spiel an diesem Tag.
-          {next
-            ? `\nNächstes Spiel: ${next.home.shortName} – ${next.away.shortName}`
-            : ""}
-        </Empty>
+      {items.length === 0 ? (
+        <Empty>Hier gibt es gerade nichts Neues.</Empty>
       ) : (
-        <>
-          {mine.length > 0 && (
-            <>
-              <SectionHeader title="Meine Teams" />
-              <View style={s.list}>
-                {mine.map((g) => (
-                  <GameCard key={g.code} game={g} />
-                ))}
-              </View>
-            </>
-          )}
-          {rest.length > 0 && (
-            <>
-              <SectionHeader
-                title={`Euroleague · Runde ${games[0].round}`}
-                right={`${rest.length} Spiele`}
-              />
-              <View style={s.list}>
-                {rest.map((g) => (
-                  <GameCard key={g.code} game={g} />
-                ))}
-              </View>
-            </>
-          )}
-        </>
+        items.map((n) => <NewsCard key={n.id} article={n} />)
       )}
+      <Text style={s.notice}>
+        Beispielartikel, bis eine Nachrichtenquelle angebunden ist.
+      </Text>
     </ScrollView>
   );
 }
 
 const s = StyleSheet.create({
-  dates: { gap: 6, paddingHorizontal: space.lg, paddingVertical: space.md },
-  date: {
-    width: 52,
-    paddingTop: 7,
-    paddingBottom: 6,
-    borderRadius: radius.md,
-    backgroundColor: colors.panel,
-    alignItems: "center",
-  },
-  dateActive: { backgroundColor: colors.ball },
-  dateSmall: {
-    fontFamily: fonts.bodyBold,
-    fontSize: 10,
+  chips: { gap: 8, paddingHorizontal: space.lg },
+  notice: {
+    fontFamily: fonts.body,
+    fontSize: 11,
     color: colors.muted,
-    textTransform: "uppercase",
-    letterSpacing: 0.6,
+    textAlign: "center",
+    paddingHorizontal: space.lg,
   },
-  dateBig: { fontFamily: fonts.display, fontSize: 20, color: colors.text },
-  onBall: { color: colors.onBall },
-  dot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    marginTop: 3,
-    backgroundColor: "transparent",
-  },
-  list: { gap: space.sm, paddingHorizontal: space.lg },
 });

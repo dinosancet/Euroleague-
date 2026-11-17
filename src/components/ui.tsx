@@ -102,19 +102,32 @@ export function Chip({
   label,
   active,
   onPress,
+  large,
 }: {
   label: string;
   active?: boolean;
   onPress?: () => void;
+  /** Bigger pill used for the feed filters on Home. */
+  large?: boolean;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected: !!active }}
       onPress={onPress}
-      style={[styles.chip, active && styles.chipActive]}
+      style={[
+        styles.chip,
+        large && styles.chipLarge,
+        active && styles.chipActive,
+      ]}
     >
-      <Text style={[styles.chipText, active && styles.chipTextActive]}>
+      <Text
+        style={[
+          styles.chipText,
+          large && styles.chipTextLarge,
+          active && styles.chipTextActive,
+        ]}
+      >
         {label}
       </Text>
     </Pressable>
@@ -272,7 +285,14 @@ export const styles = StyleSheet.create({
     borderRadius: radius.pill,
     backgroundColor: colors.panel,
   },
-  chipActive: { backgroundColor: colors.text },
+  chipLarge: {
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: colors.line,
+  },
+  chipActive: { backgroundColor: colors.text, borderColor: colors.text },
+  chipTextLarge: { fontSize: 14 },
   chipText: { fontFamily: fonts.bodyBold, fontSize: 12, color: colors.muted },
   chipTextActive: { color: colors.ink },
   seg: {

@@ -1,44 +1,41 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router/js-tabs";
-import { StyleSheet, Text, View, type ColorValue } from "react-native";
+import { StyleSheet, type ColorValue } from "react-native";
 
+import { ScreenHeader } from "@/components/screen-header";
 import { colors, fonts } from "@/theme";
 
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
 
-function HeaderTitle({ children }: { children: string }) {
-  return (
-    <View style={s.titleRow}>
-      <View style={s.logo}>
-        <Ionicons name="basketball" size={30} color={colors.ball} />
-      </View>
-      <Text style={s.title}>{children}</Text>
-    </View>
-  );
-}
-
 const icon =
-  (name: IconName) =>
-  ({ color, size }: { color: ColorValue; size: number }) => (
-    <Ionicons name={name} color={color as string} size={size} />
+  (outline: IconName, filled: IconName) =>
+  ({
+    color,
+    size,
+    focused,
+  }: {
+    color: ColorValue;
+    size: number;
+    focused: boolean;
+  }) => (
+    <Ionicons
+      name={focused ? filled : outline}
+      color={color as string}
+      size={size}
+    />
   );
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.ink,
-          borderBottomColor: colors.line,
-          borderBottomWidth: StyleSheet.hairlineWidth,
-        },
-        headerTitleAlign: "left",
-        headerTitle: ({ children }) => <HeaderTitle>{children}</HeaderTitle>,
+        header: ({ options }) => <ScreenHeader title={options.title ?? ""} />,
         tabBarStyle: {
           backgroundColor: colors.ink,
           borderTopColor: colors.line,
+          borderTopWidth: StyleSheet.hairlineWidth,
         },
-        tabBarActiveTintColor: colors.ball,
+        tabBarActiveTintColor: colors.text,
         tabBarInactiveTintColor: colors.muted,
         tabBarLabelStyle: { fontFamily: fonts.bodyBold, fontSize: 11 },
         sceneStyle: { backgroundColor: colors.ink },
@@ -46,37 +43,36 @@ export default function TabLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: "Scores", tabBarIcon: icon("basketball-outline") }}
+        options={{ title: "Home", tabBarIcon: icon("home-outline", "home") }}
       />
       <Tabs.Screen
-        name="news"
-        options={{ title: "News", tabBarIcon: icon("newspaper-outline") }}
+        name="games"
+        options={{
+          title: "Spiele",
+          tabBarIcon: icon("basketball-outline", "basketball"),
+        }}
       />
       <Tabs.Screen
         name="standings"
-        options={{ title: "Tabelle", tabBarIcon: icon("podium-outline") }}
+        options={{
+          title: "Tabelle",
+          tabBarIcon: icon("podium-outline", "podium"),
+        }}
       />
       <Tabs.Screen
-        name="my-teams"
-        options={{ title: "Meine Teams", tabBarIcon: icon("star-outline") }}
+        name="highlights"
+        options={{
+          title: "Highlights",
+          tabBarIcon: icon("play-circle-outline", "play-circle"),
+        }}
+      />
+      <Tabs.Screen
+        name="tips"
+        options={{
+          title: "Tipps",
+          tabBarIcon: icon("trophy-outline", "trophy"),
+        }}
       />
     </Tabs>
   );
 }
-
-const s = StyleSheet.create({
-  titleRow: { flexDirection: "row", alignItems: "center", gap: 10 },
-  logo: {
-    width: 30,
-    height: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontFamily: fonts.displayHeavy,
-    fontSize: 26,
-    color: colors.text,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-  },
-});
