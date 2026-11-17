@@ -12,11 +12,14 @@ interface Prefs {
   /** Club codes, e.g. "MUN". */
   favorites: string[];
   push: PushSettings;
+  /** League shown on Home, Spiele and Tabelle. */
+  league: string;
 }
 
 let prefs: Prefs = {
   favorites: ["MUN", "PAN"],
   push: { tipOff: true, finalScore: true, news: false },
+  league: "euroleague",
 };
 const listeners = new Set<() => void>();
 const set = (next: Prefs) => {
@@ -37,6 +40,7 @@ AsyncStorage.getItem(KEY)
     prefs = {
       favorites: saved.favorites ?? prefs.favorites,
       push: { ...prefs.push, ...saved.push },
+      league: saved.league ?? prefs.league,
     };
     listeners.forEach((l) => l());
   })
@@ -45,6 +49,10 @@ AsyncStorage.getItem(KEY)
 export const useFavorites = () =>
   useSyncExternalStore(subscribe, () => prefs.favorites);
 export const usePush = () => useSyncExternalStore(subscribe, () => prefs.push);
+
+export const useLeague = () =>
+  useSyncExternalStore(subscribe, () => prefs.league);
+export const setLeague = (league: string) => set({ ...prefs, league });
 
 export function toggleFavorite(code: string) {
   const favorites = prefs.favorites.includes(code)

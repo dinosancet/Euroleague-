@@ -38,6 +38,7 @@ test("a played game keeps its final score and per-quarter points", () => {
   assert.deepEqual(sum, g.score);
   assert.equal(g.home.code, "PAN");
   assert.equal(g.home.abbr, "PAO");
+  assert.match(g.home.logo ?? "", /^https:\/\/.+\.png$/);
   assert.ok(g.startUtc.endsWith("Z"));
 });
 
