@@ -60,6 +60,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="game/[id]" options={{ title: "Spiel" }} />
         <Stack.Screen name="team/[id]" options={{ title: "Team" }} />
+        <Stack.Screen name="player/[id]" options={{ title: "Spieler" }} />
         <Stack.Screen name="article/[id]" options={{ title: "News" }} />
         <Stack.Screen name="my-teams" options={{ title: "Meine Teams" }} />
       </Stack>

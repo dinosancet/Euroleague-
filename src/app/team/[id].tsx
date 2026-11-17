@@ -1,4 +1,6 @@
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { GameCard } from "@/components/game-card";
@@ -119,8 +121,29 @@ export default function TeamScreen() {
             )
           ) : (
             roster.data.players.map((p) => (
-              <View key={`${p.number}-${p.name}`} style={s.player}>
-                <Num style={s.jersey}>{p.number}</Num>
+              <Pressable
+                key={`${p.number}-${p.name}`}
+                style={s.player}
+                accessibilityRole="link"
+                accessibilityLabel={`Spielerseite ${p.name}`}
+                onPress={() =>
+                  router.push({
+                    pathname: "/player/[id]",
+                    params: { id: p.id },
+                  })
+                }
+              >
+                {p.photo ? (
+                  <Image
+                    source={{ uri: p.photo }}
+                    style={s.photo}
+                    contentFit="cover"
+                    contentPosition="top"
+                    cachePolicy="memory-disk"
+                  />
+                ) : (
+                  <Num style={s.jersey}>{p.number}</Num>
+                )}
                 <View style={{ flex: 1 }}>
                   <Text style={s.pName}>{p.name}</Text>
                   <Text style={s.pSub}>
@@ -133,7 +156,13 @@ export default function TeamScreen() {
                       .join(" · ")}
                   </Text>
                 </View>
-              </View>
+                <Num style={s.pNo}>{p.number}</Num>
+                <Ionicons
+                  name="chevron-forward"
+                  size={16}
+                  color={colors.muted}
+                />
+              </Pressable>
             ))
           )}
         </View>
@@ -152,6 +181,13 @@ function Stat({ value, label }: { value: string; label: string }) {
 }
 
 const s = StyleSheet.create({
+  photo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.panel2,
+  },
+  pNo: { fontFamily: fonts.display, fontSize: 18, color: colors.muted },
   hero: {
     flexDirection: "row",
     alignItems: "center",

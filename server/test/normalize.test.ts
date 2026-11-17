@@ -12,8 +12,10 @@ import {
   toBox,
   toGame,
   toPlays,
+  toProfile,
   toRoster,
   toStandings,
+  withPositions,
 } from "../src/normalize.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -124,4 +126,59 @@ test("standings keep order, record and form", () => {
 test("roster lists players with numbers and finds the coach", () => {
   const r = toRoster(fixture("people"));
   assert.ok(r.players.every((p) => p.name && !p.name.includes(",")));
+});
+
+test("box score has shooting splits, ids and who is on the court", () => {
+  const raw = fixture("live-boxscore");
+  const box = toBox({ ...raw, Live: true });
+  assert.ok(box);
+  const okobo = box.home.find((p) => p.name === "Elie Okobo");
+  assert.ok(okobo);
+  assert.equal(okobo.id, "011212");
+  assert.deepEqual(okobo.twos, [1, 5]);
+  assert.deepEqual(okobo.threes, [0, 3]);
+  assert.equal(okobo.pir, -2);
+  const expected = raw.Stats[0].PlayersStats.filter(
+    (p: { IsPlaying: number }) => p.IsPlaying === 1,
+  ).length;
+  assert.equal(box.home.filter((p) => p.onCourt).length, expected);
+  assert.deepEqual(box.totals.home.threes, [8, 30]);
+  // After the game nobody is shown as on the court.
+  const done = toBox({ ...raw, Live: false });
+  assert.ok(done && !done.home.some((p) => p.onCourt));
+});
+
+test("player profile has info, season averages and newest game first", () => {
+  const p = toProfile(fixture("person").data[0], fixture("person-stats"));
+  assert.equal(p.id, "014213");
+  assert.equal(p.name, "Cameron Payne");
+  assert.equal(p.team?.code, "IST");
+  assert.equal(p.birthDate, "1994-08-08");
+  assert.ok(p.season);
+  assert.equal(p.season.games, 9);
+  assert.equal(p.season.averages.points, 15.2);
+  assert.equal(p.season.minutes, "21:19");
+  assert.equal(p.season.pct.threes, 47.7);
+  assert.equal(p.games.length, 9);
+  assert.ok(p.games[0].startUtc > p.games[1].startUtc);
+  const vsBayern = p.games.find((g) => g.opponent.code === "MUN");
+  assert.ok(vsBayern);
+  assert.equal(vsBayern.atHome, true);
+  assert.deepEqual(vsBayern.score, [93, 101]);
+  assert.equal(vsBayern.won, false);
+  const sum = p.games.reduce((s, g) => s + g.stats.points, 0);
+  assert.equal(sum, 137);
+});
+
+test("roster players carry their id for the player page", () => {
+  const r = toRoster(fixture("people"));
+  assert.ok(r.players.every((p) => /^\d+$/.test(p.id)));
+});
+
+test("box score players get their short position from the roster", () => {
+  const box = toBox(fixture("live-boxscore"));
+  assert.ok(box);
+  const filled = withPositions(box, new Map([["011212", "Guard"]]));
+  assert.equal(filled.home.find((p) => p.id === "011212")?.position, "G");
+  assert.ok(filled.home.some((p) => p.position === ""));
 });

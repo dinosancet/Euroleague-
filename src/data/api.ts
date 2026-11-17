@@ -5,6 +5,7 @@
 import type {
   ApiGame,
   ApiGameDetail,
+  ApiPlayerProfile,
   ApiRoster,
   ApiStandings,
 } from "@shared/api";
@@ -143,3 +144,6 @@ export const useStandings = () =>
 
 export const useRoster = (code: string) =>
   useApi<ApiRoster>(`/v1/teams/${code}`);
+
+export const usePlayer = (code: string) =>
+  useApi<ApiPlayerProfile>(`/v1/players/${code}`);

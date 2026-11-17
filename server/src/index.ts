@@ -9,10 +9,12 @@
  *   /v1/games/:code        one game with box score and play-by-play
  *   /v1/standings          table after the latest played round
  *   /v1/teams/:code        roster of one club
+ *   /v1/players/:code      player info, season averages and game log
  */
 import type {
   ApiGame,
   ApiGameDetail,
+  ApiPlayerProfile,
   ApiRoster,
   ApiStandings,
 } from "../../shared/api";
@@ -23,14 +25,17 @@ import {
   toBox,
   toGame,
   toPlays,
+  toProfile,
   toRoster,
   toStandings,
+  withPositions,
   toTeam,
   type ElBoxscore,
   type ElClub,
   type ElGame,
   type ElLiveHeader,
   type ElPerson,
+  type ElPersonStats,
   type ElPlayByPlay,
   type ElStandingRow,
 } from "./normalize";
@@ -52,6 +57,7 @@ const TTL = {
   final: 6 * 3600,
   standings: 300,
   roster: 12 * 3600,
+  player: 600,
 };
 
 /* ---------- caching ---------- */
@@ -180,7 +186,24 @@ async function gameDetail(
       ),
     ).catch(() => []),
   ]);
-  return { game, box, plays };
+  return { game, box: box && (await addPositions(env, game, box)), plays };
+}
+
+/** Positions are not in the box score, so take them from the (long cached) rosters. */
+async function addPositions(
+  env: Env,
+  game: ApiGame,
+  box: NonNullable<ApiGameDetail["box"]>,
+) {
+  const rosters = await Promise.all(
+    [game.home.code, game.away.code].map((c) =>
+      roster(env, c).catch(() => null),
+    ),
+  );
+  const positions = new Map<string, string>();
+  for (const r of rosters)
+    for (const p of r?.players ?? []) positions.set(p.id, p.position);
+  return withPositions(box, positions);
 }
 
 async function standings(env: Env): Promise<ApiStandings> {
@@ -203,6 +226,23 @@ async function roster(env: Env, code: string): Promise<ApiRoster | null> {
       `${API}/v2/${seasonPath(env)}/clubs/${code}/people`,
     );
     return { team: toTeam(club), ...toRoster(people) };
+  });
+}
+
+async function player(
+  env: Env,
+  code: string,
+): Promise<ApiPlayerProfile | null> {
+  return cached(`player:${env.SEASON}:${code}`, TTL.player, async () => {
+    const info = await getJson<{ data: ElPerson[] }>(
+      `${API}/v2/${seasonPath(env)}/people/${code}`,
+    ).catch(() => null);
+    const person = info?.data?.find((p) => p.type === "J") ?? info?.data?.[0];
+    if (!person) return null;
+    const stats = await getJson<ElPersonStats>(
+      `${API}/v2/${seasonPath(env)}/people/${code}/stats`,
+    ).catch(() => null);
+    return toProfile(person, stats);
   });
 }
 
@@ -246,6 +286,13 @@ export async function handle(req: Request, env: Env): Promise<Response> {
       return r
         ? json(r, 200, 3600)
         : json({ error: "Team nicht gefunden." }, 404);
+    }
+    m = path.match(/^\/v1\/players\/([A-Z0-9]{3,12})$/i);
+    if (m) {
+      const p = await player(env, m[1].toUpperCase());
+      return p
+        ? json(p, 200, 300)
+        : json({ error: "Spieler nicht gefunden." }, 404);
     }
     if (path === "" || path === "/")
       return json({ name: "Hoopline API", season: env.SEASON });
