@@ -8,8 +8,11 @@ import type {
   ApiGameDetail,
   ApiPlay,
   ApiPlayer,
+  ApiPlayerGame,
   ApiPlayerLine,
+  ApiPlayerProfile,
   ApiStanding,
+  ApiStatLine,
   ApiTeam,
   ApiTeamTotals,
 } from "../../shared/api";
@@ -53,24 +56,37 @@ export interface ElLiveHeader {
   [key: string]: unknown;
 }
 
-export interface ElBoxPlayer {
-  IsStarter: number;
-  Dorsal: string;
-  Player: string;
+/** Counting stats as the live box score names them. */
+export interface ElBoxStats {
   Minutes: string;
   Points: number;
+  FieldGoalsMade2: number;
+  FieldGoalsAttempted2: number;
+  FieldGoalsMade3: number;
+  FieldGoalsAttempted3: number;
+  FreeThrowsMade: number;
+  FreeThrowsAttempted: number;
+  OffensiveRebounds: number;
+  DefensiveRebounds: number;
   TotalRebounds: number;
   Assistances: number;
-  Plusminus: number;
+  Steals: number;
+  Turnovers: number;
+  BlocksFavour: number;
+  FoulsCommited: number;
+  Valuation: number;
+  Plusminus?: number;
 }
 
-export interface ElBoxTotals {
-  TotalRebounds: number;
-  Assistances: number;
-  FieldGoalsMade3: number;
-  Turnovers: number;
-  Steals: number;
+export interface ElBoxPlayer extends ElBoxStats {
+  Player_ID: string;
+  IsStarter: number;
+  IsPlaying: number;
+  Dorsal: string;
+  Player: string;
 }
+
+export type ElBoxTotals = ElBoxStats;
 
 export interface ElBoxscore {
   ByQuarter: Record<string, string | number>[];
@@ -112,11 +128,58 @@ export interface ElPerson {
   type: string;
   dorsal: string | null;
   positionName: string | null;
+  lastTeam?: string | null;
+  images?: { headshot?: string | null } | null;
+  club?: ElClub | null;
   person: {
+    code: string;
     name: string;
     height: number | null;
+    weight?: number | null;
+    birthDate?: string | null;
     country?: { name: string } | null;
   };
+}
+
+/** Season stats of one player, per game or summed, as the v2 API names them. */
+export interface ElPersonStatLine {
+  timePlayed: number;
+  valuation: number;
+  points: number;
+  fieldGoalsMade2: number;
+  fieldGoalsAttempted2: number;
+  fieldGoalsMade3: number;
+  fieldGoalsAttempted3: number;
+  freeThrowsMade: number;
+  freeThrowsAttempted: number;
+  totalRebounds: number;
+  defensiveRebounds: number;
+  offensiveRebounds: number;
+  assistances: number;
+  steals: number;
+  turnovers: number;
+  blocksFavour: number;
+  foulsCommited: number;
+  plusMinus: number;
+  gamesPlayed?: number;
+  totalGamesStarted?: number;
+  startFive?: boolean;
+  threePointShootingPercentage?: string;
+  twoPointShootingPercentage?: string;
+  freeThrowShootingPercentage?: string;
+}
+
+export interface ElPersonStats {
+  games: {
+    game: Omit<ElGame, "local" | "road"> & {
+      local: { club: ElClub; score: number };
+      road: { club: ElClub; score: number };
+    };
+    stats: ElPersonStatLine;
+    playerClubCode: string;
+  }[];
+  accumulated: ElPersonStatLine | null;
+  averagePerGame: ElPersonStatLine | null;
 }
 
 /* ---------- helpers ---------- */
@@ -227,37 +290,53 @@ export function mightBeLive(game: ApiGame, now: Date): boolean {
 
 /* ---------- box score ---------- */
 
-function toLine(p: ElBoxPlayer): ApiPlayerLine {
-  const played = /^\d+:\d+$/.test(p.Minutes ?? "");
+function boxStats(p: ElBoxStats): ApiStatLine {
   return {
-    number: p.Dorsal,
-    name: formatName(p.Player),
-    starter: p.IsStarter === 1,
-    minutes: played ? p.Minutes : "",
     points: p.Points ?? 0,
+    twos: [p.FieldGoalsMade2 ?? 0, p.FieldGoalsAttempted2 ?? 0],
+    threes: [p.FieldGoalsMade3 ?? 0, p.FieldGoalsAttempted3 ?? 0],
+    freeThrows: [p.FreeThrowsMade ?? 0, p.FreeThrowsAttempted ?? 0],
+    offRebounds: p.OffensiveRebounds ?? 0,
+    defRebounds: p.DefensiveRebounds ?? 0,
     rebounds: p.TotalRebounds ?? 0,
     assists: p.Assistances ?? 0,
+    steals: p.Steals ?? 0,
+    turnovers: p.Turnovers ?? 0,
+    blocks: p.BlocksFavour ?? 0,
+    fouls: p.FoulsCommited ?? 0,
+    pir: p.Valuation ?? 0,
     plusMinus: p.Plusminus ?? 0,
   };
 }
 
-function toTotals(t: ElBoxTotals): ApiTeamTotals {
+/** "P011212   " -> "011212" (the code the people endpoints use). */
+export function personCode(raw: string | null | undefined): string {
+  return (raw ?? "").trim().replace(/^P/, "");
+}
+
+function toLine(p: ElBoxPlayer, live: boolean): ApiPlayerLine {
+  const played = /^\d+:\d+$/.test(p.Minutes ?? "");
   return {
-    rebounds: t.TotalRebounds ?? 0,
-    assists: t.Assistances ?? 0,
-    threesMade: t.FieldGoalsMade3 ?? 0,
-    turnovers: t.Turnovers ?? 0,
-    steals: t.Steals ?? 0,
+    id: personCode(p.Player_ID),
+    number: p.Dorsal,
+    name: formatName(p.Player),
+    starter: p.IsStarter === 1,
+    onCourt: live && p.IsPlaying === 1,
+    minutes: played ? p.Minutes : "",
+    ...boxStats(p),
   };
 }
 
-export function toBox(b: ElBoxscore): ApiGameDetail["box"] {
+export function toBox(
+  b: ElBoxscore & { Live?: boolean },
+): ApiGameDetail["box"] {
   if (!b?.Stats || b.Stats.length < 2) return null;
+  const live = !!b.Live;
   const [home, away] = b.Stats;
   return {
-    home: home.PlayersStats.map(toLine),
-    away: away.PlayersStats.map(toLine),
-    totals: { home: toTotals(home.totr), away: toTotals(away.totr) },
+    home: home.PlayersStats.map((p) => toLine(p, live)),
+    away: away.PlayersStats.map((p) => toLine(p, live)),
+    totals: { home: boxStats(home.totr), away: boxStats(away.totr) },
   };
 }
 
@@ -353,12 +432,103 @@ export function toRoster(people: ElPerson[]): {
   const players = people
     .filter((p) => p.type === "J")
     .map((p) => ({
+      id: p.person.code,
       number: p.dorsal ?? "",
       name: formatName(p.person.name),
       position: p.positionName ?? "",
       heightCm: p.person.height || null,
       country: p.person.country?.name ?? null,
+      photo: p.images?.headshot || null,
     }))
     .sort((a, b) => Number(a.number) - Number(b.number));
   return { coach: coach ? formatName(coach.person.name) : null, players };
+}
+
+/* ---------- player profile ---------- */
+
+/** Seconds -> "mm:ss". */
+export function clockFromSeconds(sec: number): string {
+  const s = Math.round(sec || 0);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
+function personStats(s: ElPersonStatLine): ApiStatLine {
+  return {
+    points: s.points ?? 0,
+    twos: [s.fieldGoalsMade2 ?? 0, s.fieldGoalsAttempted2 ?? 0],
+    threes: [s.fieldGoalsMade3 ?? 0, s.fieldGoalsAttempted3 ?? 0],
+    freeThrows: [s.freeThrowsMade ?? 0, s.freeThrowsAttempted ?? 0],
+    offRebounds: s.offensiveRebounds ?? 0,
+    defRebounds: s.defensiveRebounds ?? 0,
+    rebounds: s.totalRebounds ?? 0,
+    assists: s.assistances ?? 0,
+    steals: s.steals ?? 0,
+    turnovers: s.turnovers ?? 0,
+    blocks: s.blocksFavour ?? 0,
+    fouls: s.foulsCommited ?? 0,
+    pir: s.valuation ?? 0,
+    plusMinus: s.plusMinus ?? 0,
+  };
+}
+
+const pct = (v?: string) => {
+  const n = parseFloat(v ?? "");
+  return Number.isFinite(n) ? n : null;
+};
+
+export function toProfile(
+  info: ElPerson,
+  stats: ElPersonStats | null,
+): ApiPlayerProfile {
+  const avg = stats?.averagePerGame;
+  const games: ApiPlayerGame[] = (stats?.games ?? [])
+    .filter((g) => g.game.played)
+    .map(({ game, stats: st, playerClubCode }) => {
+      const atHome = game.local.club.code === playerClubCode;
+      const own = atHome ? game.local : game.road;
+      const opp = atHome ? game.road : game.local;
+      return {
+        code: game.gameCode,
+        round: game.round,
+        startUtc: game.utcDate.endsWith("Z")
+          ? game.utcDate
+          : `${game.utcDate}Z`,
+        opponent: toTeam(opp.club),
+        atHome,
+        score: [own.score, opp.score] as [number, number],
+        won: own.score > opp.score,
+        started: !!st.startFive,
+        minutes: clockFromSeconds(st.timePlayed),
+        stats: personStats(st),
+      };
+    })
+    .sort((a, b) => b.startUtc.localeCompare(a.startUtc));
+  return {
+    id: info.person.code,
+    name: formatName(info.person.name),
+    number: info.dorsal ?? "",
+    position: info.positionName ?? "",
+    team: info.club ? toTeam(info.club) : null,
+    photo: info.images?.headshot || null,
+    heightCm: info.person.height || null,
+    weightKg: info.person.weight || null,
+    birthDate: info.person.birthDate?.slice(0, 10) || null,
+    country: info.person.country?.name ?? null,
+    lastTeam: info.lastTeam ? formatName(info.lastTeam) : null,
+    season:
+      avg && (avg.gamesPlayed ?? 0) > 0
+        ? {
+            games: avg.gamesPlayed ?? 0,
+            starts: avg.totalGamesStarted ?? 0,
+            minutes: clockFromSeconds(avg.timePlayed),
+            averages: personStats(avg),
+            pct: {
+              twos: pct(avg.twoPointShootingPercentage),
+              threes: pct(avg.threePointShootingPercentage),
+              freeThrows: pct(avg.freeThrowShootingPercentage),
+            },
+          }
+        : null,
+    games,
+  };
 }

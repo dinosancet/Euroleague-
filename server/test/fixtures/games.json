@@ -1,1 +1,464 @@
-{"data": [{"id": "60e4a2aa-3f01-488d-ba4f-69262519f30f", "identifier": "E2026_130", "gameCode": 130, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}, "group": {"id": "c3243224-039c-4e93-9e16-12a7f4b2d383", "order": 1, "name": "Group Regular Season", "rawName": "Regular Season"}, "phaseType": {"code": "RS", "alias": "REGULAR SEASON", "name": "Regular Season", "isGroupPhase": true}, "round": 13, "roundAlias": "Round 13", "roundName": "Round 13", "played": false, "date": "2026-11-20T20:15:00", "confirmedDate": true, "confirmedHour": true, "localTimeZone": 2, "localDate": "2026-11-20T21:15:00", "utcDate": "2026-11-20T19:15:00Z", "local": {"club": {"code": "OLY", "name": "Olympiacos Piraeus", "abbreviatedName": "Olympiacos", "editorialName": "Olympiacos", "tvCode": "OLY", "isVirtual": false, "images": {"crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"}}, "score": 0, "standingsScore": 0, "partials": {"partials1": 0, "partials2": 0, "partials3": 0, "partials4": 0, "extraPeriods": {}}}, "road": {"club": {"code": "MAD", "name": "Real Madrid", "abbreviatedName": "Real Madrid", "editorialName": "Real", "tvCode": "RMB", "isVirtual": false, "images": {"crest": "https://media-cdn.incrowdsports.com/371b0d9b-9250-4c09-bda7-0686cf024657.png"}}, "score": 0, "standingsScore": 0, "partials": {"partials1": 0, "partials2": 0, "partials3": 0, "partials4": 0, "extraPeriods": {}}}, "audience": 0, "audienceConfirmed": false, "socialFeed": "", "operationsCode": null, "referee1": null, "referee2": null, "referee3": null, "referee4": null, "venue": {"name": "SUNEL ARENA", "code": "AVT1", "capacity": 8300, "address": "Konstantinoupoleos 59, Ano Liosia, 13342 Athens, Greece", "images": {"medium": null}, "active": true, "notes": ""}, "isNeutralVenue": false, "gameStatus": "Confirmed", "winner": null}, {"id": "8b4c4c98-70b8-4b73-a363-e05201bac063", "identifier": "E2026_113", "gameCode": 113, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}, "group": {"id": "c3243224-039c-4e93-9e16-12a7f4b2d383", "order": 1, "name": "Group Regular Season", "rawName": "Regular Season"}, "phaseType": {"code": "RS", "alias": "REGULAR SEASON", "name": "Regular Season", "isGroupPhase": true}, "round": 12, "roundAlias": "Round 12", "roundName": "Round 12", "played": false, "date": "2026-11-17T18:00:00", "confirmedDate": true, "confirmedHour": true, "localTimeZone": 2, "localDate": "2026-11-17T19:00:00", "utcDate": "2026-11-17T17:00:00Z", "local": {"club": {"code": "TEL", "name": "Maccabi Rapyd Tel Aviv", "abbreviatedName": "Maccabi", "editorialName": "Maccabi", "tvCode": "MTA", "isVirtual": false, "images": {"crest": "https://media-cdn.cortextech.io/1b533342-78f5-4932-b714-a7d80b5826b5.png"}}, "score": 0, "standingsScore": 0, "partials": {"partials1": 0, "partials2": 0, "partials3": 0, "partials4": 0, "extraPeriods": {}}}, "road": {"club": {"code": "OLY", "name": "Olympiacos Piraeus", "abbreviatedName": "Olympiacos", "editorialName": "Olympiacos", "tvCode": "OLY", "isVirtual": false, "images": {"crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"}}, "score": 0, "standingsScore": 0, "partials": {"partials1": 0, "partials2": 0, "partials3": 0, "partials4": 0, "extraPeriods": {}}}, "audience": 0, "audienceConfirmed": false, "socialFeed": "", "operationsCode": null, "referee1": {"code": "OJDL", "name": "MOGULKOC, EMIN", "alias": "MOGULKOC, E.", "country": {"code": "TUR", "name": "Turkiye"}, "images": {"verticalSmall": "885ubsvbyuo7gpso"}, "active": true}, "referee2": {"code": "OJGK", "name": "PETEK, SASO", "alias": "PETEK, S.", "country": {"code": "SLO", "name": "Slovenia"}, "images": {"verticalSmall": "885y7w6ple8p7mei"}, "active": true}, "referee3": {"code": "QJLU", "name": "UDYANSKYY, EDUARD", "alias": "UDYANSKYY, E.", "country": {"code": "GBR", "name": "United Kingdom"}, "images": {"verticalSmall": "94qqejbv9sckawws"}, "active": true}, "referee4": null, "venue": {"name": "SPYROS KYPRIANOU ATHLETIC CENTER", "code": "AVU1", "capacity": 6552, "address": "", "images": {"medium": null}, "active": true, "notes": ""}, "isNeutralVenue": false, "gameStatus": "Confirmed", "winner": null}, {"id": "10c6993c-fbc0-4fd1-a45a-4bdd8426aab9", "identifier": "E2026_111", "gameCode": 111, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}, "group": {"id": "c3243224-039c-4e93-9e16-12a7f4b2d383", "order": 1, "name": "Group Regular Season", "rawName": "Regular Season"}, "phaseType": {"code": "RS", "alias": "REGULAR SEASON", "name": "Regular Season", "isGroupPhase": true}, "round": 12, "roundAlias": "Round 12", "roundName": "Round 12", "played": false, "date": "2026-11-17T17:00:00", "confirmedDate": true, "confirmedHour": true, "localTimeZone": 4, "localDate": "2026-11-17T20:00:00", "utcDate": "2026-11-17T16:00:00Z", "local": {"club": {"code": "DUB", "name": "Dubai Basketball", "abbreviatedName": "Dubai", "editorialName": "Dubai", "tvCode": "DUB", "isVirtual": false, "images": {"crest": "https://media-cdn.incrowdsports.com/1efae090-16e2-4963-ae47-4b94f249c244.png"}}, "score": 0, "standingsScore": 0, "partials": {"partials1": 0, "partials2": 0, "partials3": 0, "partials4": 0, "extraPeriods": {}}}, "road": {"club": {"code": "IST", "name": "Anadolu Efes Istanbul", "abbreviatedName": "Anadolu Efes", "editorialName": "Efes", "tvCode": "EFS", "isVirtual": false, "images": {"crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"}}, "score": 0, "standingsScore": 0, "partials": {"partials1": 0, "partials2": 0, "partials3": 0, "partials4": 0, "extraPeriods": {}}}, "audience": 0, "audienceConfirmed": false, "socialFeed": "", "operationsCode": null, "referee1": {"code": "QJLV", "name": "VILIUS, GYTIS", "alias": "VILIUS, G.", "country": {"code": "LTU", "name": "Lithuania"}, "images": {"verticalSmall": "94qq99ojsab3pjud"}, "active": true}, "referee2": {"code": "OJLO", "name": "ROSSI, MICHELE", "alias": "ROSSI, M.", "country": {"code": "ITA", "name": "Italy"}, "images": {"verticalSmall": "8868fcomeqrjyexb"}, "active": true}, "referee3": {"code": "013175", "name": "MANUEL, SERGIO", "alias": "MANUEL, S.", "country": {"code": "ESP", "name": "Spain"}, "images": {"verticalSmall": null}, "active": true}, "referee4": null, "venue": {"name": "COCA-COLA ARENA", "code": "ACA4", "capacity": 13221, "address": "Al Wasl - سٹی واک - Dubai - United Arab Emirates", "images": {"medium": null}, "active": true, "notes": ""}, "isNeutralVenue": false, "gameStatus": "Confirmed", "winner": null}, {"id": "be31ca28-a798-4b49-8edf-b137518aea59", "identifier": "E2026_110", "gameCode": 110, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}, "group": {"id": "c3243224-039c-4e93-9e16-12a7f4b2d383", "order": 1, "name": "Group Regular Season", "rawName": "Regular Season"}, "phaseType": {"code": "RS", "alias": "REGULAR SEASON", "name": "Regular Season", "isGroupPhase": true}, "round": 11, "roundAlias": "Round 11", "roundName": "Round 11", "played": true, "date": "2026-11-13T20:15:00", "confirmedDate": true, "confirmedHour": true, "localTimeZone": 2, "localDate": "2026-11-13T21:15:00", "utcDate": "2026-11-13T19:15:00Z", "local": {"club": {"code": "PAN", "name": "Panathinaikos AKTOR Athens", "abbreviatedName": "Panathinaikos", "editorialName": "Panathinaikos", "tvCode": "PAO", "isVirtual": false, "images": {"crest": "https://media-cdn.incrowdsports.com/e3dff28a-9ec6-4faf-9d96-ecbc68f75780.png"}}, "score": 74, "standingsScore": 74, "partials": {"partials1": 17, "partials2": 16, "partials3": 24, "partials4": 17, "extraPeriods": {}}}, "road": {"club": {"code": "BAR", "name": "FC Barcelona", "abbreviatedName": "FC Barcelona", "editorialName": "Barca", "tvCode": "BAR", "isVirtual": false, "images": {"crest": "https://media-cdn.incrowdsports.com/35dfa503-e417-481f-963a-bdf6f013763e.png"}}, "score": 76, "standingsScore": 76, "partials": {"partials1": 17, "partials2": 15, "partials3": 11, "partials4": 33, "extraPeriods": {}}}, "audience": 19073, "audienceConfirmed": true, "socialFeed": "", "operationsCode": null, "referee1": {"code": "OJLL", "name": "DIFALLAH, MEHDI", "alias": "DIFALLAH, M.", "country": {"code": "FRA", "name": "France"}, "images": {"verticalSmall": "87ytu4ivn6qtsqni"}, "active": true}, "referee2": {"code": "OJFC", "name": "JAVOR, DAMIR", "alias": "JAVOR, D.", "country": {"code": "SLO", "name": "Slovenia"}, "images": {"verticalSmall": "883i7yokjhfy7pih"}, "active": true}, "referee3": {"code": "OACY", "name": "JOVCIC, MILIVOJE", "alias": "JOVCIC, M.", "country": {"code": "SRB", "name": "Serbia"}, "images": {"verticalSmall": "8844kualjiu9jr5p"}, "active": true}, "referee4": null, "venue": {"name": "TELEKOM CENTER ATHENS", "code": "AUM6", "capacity": 18500, "address": "37 Kifisias Avenue, 15123 Marousi", "images": {"medium": null}, "active": true, "notes": ""}, "isNeutralVenue": false, "gameStatus": "Confirmed", "winner": null}], "total": 4}
+{
+  "data": [
+    {
+      "id": "60e4a2aa-3f01-488d-ba4f-69262519f30f",
+      "identifier": "E2026_130",
+      "gameCode": 130,
+      "season": {
+        "name": "EuroLeague 2026-27",
+        "code": "E2026",
+        "alias": "2026-27",
+        "competitionCode": "E",
+        "year": 2026,
+        "startDate": "2026-07-01T00:00:00"
+      },
+      "group": {
+        "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+        "order": 1,
+        "name": "Group Regular Season",
+        "rawName": "Regular Season"
+      },
+      "phaseType": {
+        "code": "RS",
+        "alias": "REGULAR SEASON",
+        "name": "Regular Season",
+        "isGroupPhase": true
+      },
+      "round": 13,
+      "roundAlias": "Round 13",
+      "roundName": "Round 13",
+      "played": false,
+      "date": "2026-11-20T20:15:00",
+      "confirmedDate": true,
+      "confirmedHour": true,
+      "localTimeZone": 2,
+      "localDate": "2026-11-20T21:15:00",
+      "utcDate": "2026-11-20T19:15:00Z",
+      "local": {
+        "club": {
+          "code": "OLY",
+          "name": "Olympiacos Piraeus",
+          "abbreviatedName": "Olympiacos",
+          "editorialName": "Olympiacos",
+          "tvCode": "OLY",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"
+          }
+        },
+        "score": 0,
+        "standingsScore": 0,
+        "partials": {
+          "partials1": 0,
+          "partials2": 0,
+          "partials3": 0,
+          "partials4": 0,
+          "extraPeriods": {}
+        }
+      },
+      "road": {
+        "club": {
+          "code": "MAD",
+          "name": "Real Madrid",
+          "abbreviatedName": "Real Madrid",
+          "editorialName": "Real",
+          "tvCode": "RMB",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/371b0d9b-9250-4c09-bda7-0686cf024657.png"
+          }
+        },
+        "score": 0,
+        "standingsScore": 0,
+        "partials": {
+          "partials1": 0,
+          "partials2": 0,
+          "partials3": 0,
+          "partials4": 0,
+          "extraPeriods": {}
+        }
+      },
+      "audience": 0,
+      "audienceConfirmed": false,
+      "socialFeed": "",
+      "operationsCode": null,
+      "referee1": null,
+      "referee2": null,
+      "referee3": null,
+      "referee4": null,
+      "venue": {
+        "name": "SUNEL ARENA",
+        "code": "AVT1",
+        "capacity": 8300,
+        "address": "Konstantinoupoleos 59, Ano Liosia, 13342 Athens, Greece",
+        "images": { "medium": null },
+        "active": true,
+        "notes": ""
+      },
+      "isNeutralVenue": false,
+      "gameStatus": "Confirmed",
+      "winner": null
+    },
+    {
+      "id": "8b4c4c98-70b8-4b73-a363-e05201bac063",
+      "identifier": "E2026_113",
+      "gameCode": 113,
+      "season": {
+        "name": "EuroLeague 2026-27",
+        "code": "E2026",
+        "alias": "2026-27",
+        "competitionCode": "E",
+        "year": 2026,
+        "startDate": "2026-07-01T00:00:00"
+      },
+      "group": {
+        "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+        "order": 1,
+        "name": "Group Regular Season",
+        "rawName": "Regular Season"
+      },
+      "phaseType": {
+        "code": "RS",
+        "alias": "REGULAR SEASON",
+        "name": "Regular Season",
+        "isGroupPhase": true
+      },
+      "round": 12,
+      "roundAlias": "Round 12",
+      "roundName": "Round 12",
+      "played": false,
+      "date": "2026-11-17T18:00:00",
+      "confirmedDate": true,
+      "confirmedHour": true,
+      "localTimeZone": 2,
+      "localDate": "2026-11-17T19:00:00",
+      "utcDate": "2026-11-17T17:00:00Z",
+      "local": {
+        "club": {
+          "code": "TEL",
+          "name": "Maccabi Rapyd Tel Aviv",
+          "abbreviatedName": "Maccabi",
+          "editorialName": "Maccabi",
+          "tvCode": "MTA",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.cortextech.io/1b533342-78f5-4932-b714-a7d80b5826b5.png"
+          }
+        },
+        "score": 0,
+        "standingsScore": 0,
+        "partials": {
+          "partials1": 0,
+          "partials2": 0,
+          "partials3": 0,
+          "partials4": 0,
+          "extraPeriods": {}
+        }
+      },
+      "road": {
+        "club": {
+          "code": "OLY",
+          "name": "Olympiacos Piraeus",
+          "abbreviatedName": "Olympiacos",
+          "editorialName": "Olympiacos",
+          "tvCode": "OLY",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"
+          }
+        },
+        "score": 0,
+        "standingsScore": 0,
+        "partials": {
+          "partials1": 0,
+          "partials2": 0,
+          "partials3": 0,
+          "partials4": 0,
+          "extraPeriods": {}
+        }
+      },
+      "audience": 0,
+      "audienceConfirmed": false,
+      "socialFeed": "",
+      "operationsCode": null,
+      "referee1": {
+        "code": "OJDL",
+        "name": "MOGULKOC, EMIN",
+        "alias": "MOGULKOC, E.",
+        "country": { "code": "TUR", "name": "Turkiye" },
+        "images": { "verticalSmall": "885ubsvbyuo7gpso" },
+        "active": true
+      },
+      "referee2": {
+        "code": "OJGK",
+        "name": "PETEK, SASO",
+        "alias": "PETEK, S.",
+        "country": { "code": "SLO", "name": "Slovenia" },
+        "images": { "verticalSmall": "885y7w6ple8p7mei" },
+        "active": true
+      },
+      "referee3": {
+        "code": "QJLU",
+        "name": "UDYANSKYY, EDUARD",
+        "alias": "UDYANSKYY, E.",
+        "country": { "code": "GBR", "name": "United Kingdom" },
+        "images": { "verticalSmall": "94qqejbv9sckawws" },
+        "active": true
+      },
+      "referee4": null,
+      "venue": {
+        "name": "SPYROS KYPRIANOU ATHLETIC CENTER",
+        "code": "AVU1",
+        "capacity": 6552,
+        "address": "",
+        "images": { "medium": null },
+        "active": true,
+        "notes": ""
+      },
+      "isNeutralVenue": false,
+      "gameStatus": "Confirmed",
+      "winner": null
+    },
+    {
+      "id": "10c6993c-fbc0-4fd1-a45a-4bdd8426aab9",
+      "identifier": "E2026_111",
+      "gameCode": 111,
+      "season": {
+        "name": "EuroLeague 2026-27",
+        "code": "E2026",
+        "alias": "2026-27",
+        "competitionCode": "E",
+        "year": 2026,
+        "startDate": "2026-07-01T00:00:00"
+      },
+      "group": {
+        "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+        "order": 1,
+        "name": "Group Regular Season",
+        "rawName": "Regular Season"
+      },
+      "phaseType": {
+        "code": "RS",
+        "alias": "REGULAR SEASON",
+        "name": "Regular Season",
+        "isGroupPhase": true
+      },
+      "round": 12,
+      "roundAlias": "Round 12",
+      "roundName": "Round 12",
+      "played": false,
+      "date": "2026-11-17T17:00:00",
+      "confirmedDate": true,
+      "confirmedHour": true,
+      "localTimeZone": 4,
+      "localDate": "2026-11-17T20:00:00",
+      "utcDate": "2026-11-17T16:00:00Z",
+      "local": {
+        "club": {
+          "code": "DUB",
+          "name": "Dubai Basketball",
+          "abbreviatedName": "Dubai",
+          "editorialName": "Dubai",
+          "tvCode": "DUB",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/1efae090-16e2-4963-ae47-4b94f249c244.png"
+          }
+        },
+        "score": 0,
+        "standingsScore": 0,
+        "partials": {
+          "partials1": 0,
+          "partials2": 0,
+          "partials3": 0,
+          "partials4": 0,
+          "extraPeriods": {}
+        }
+      },
+      "road": {
+        "club": {
+          "code": "IST",
+          "name": "Anadolu Efes Istanbul",
+          "abbreviatedName": "Anadolu Efes",
+          "editorialName": "Efes",
+          "tvCode": "EFS",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+          }
+        },
+        "score": 0,
+        "standingsScore": 0,
+        "partials": {
+          "partials1": 0,
+          "partials2": 0,
+          "partials3": 0,
+          "partials4": 0,
+          "extraPeriods": {}
+        }
+      },
+      "audience": 0,
+      "audienceConfirmed": false,
+      "socialFeed": "",
+      "operationsCode": null,
+      "referee1": {
+        "code": "QJLV",
+        "name": "VILIUS, GYTIS",
+        "alias": "VILIUS, G.",
+        "country": { "code": "LTU", "name": "Lithuania" },
+        "images": { "verticalSmall": "94qq99ojsab3pjud" },
+        "active": true
+      },
+      "referee2": {
+        "code": "OJLO",
+        "name": "ROSSI, MICHELE",
+        "alias": "ROSSI, M.",
+        "country": { "code": "ITA", "name": "Italy" },
+        "images": { "verticalSmall": "8868fcomeqrjyexb" },
+        "active": true
+      },
+      "referee3": {
+        "code": "013175",
+        "name": "MANUEL, SERGIO",
+        "alias": "MANUEL, S.",
+        "country": { "code": "ESP", "name": "Spain" },
+        "images": { "verticalSmall": null },
+        "active": true
+      },
+      "referee4": null,
+      "venue": {
+        "name": "COCA-COLA ARENA",
+        "code": "ACA4",
+        "capacity": 13221,
+        "address": "Al Wasl - سٹی واک - Dubai - United Arab Emirates",
+        "images": { "medium": null },
+        "active": true,
+        "notes": ""
+      },
+      "isNeutralVenue": false,
+      "gameStatus": "Confirmed",
+      "winner": null
+    },
+    {
+      "id": "be31ca28-a798-4b49-8edf-b137518aea59",
+      "identifier": "E2026_110",
+      "gameCode": 110,
+      "season": {
+        "name": "EuroLeague 2026-27",
+        "code": "E2026",
+        "alias": "2026-27",
+        "competitionCode": "E",
+        "year": 2026,
+        "startDate": "2026-07-01T00:00:00"
+      },
+      "group": {
+        "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+        "order": 1,
+        "name": "Group Regular Season",
+        "rawName": "Regular Season"
+      },
+      "phaseType": {
+        "code": "RS",
+        "alias": "REGULAR SEASON",
+        "name": "Regular Season",
+        "isGroupPhase": true
+      },
+      "round": 11,
+      "roundAlias": "Round 11",
+      "roundName": "Round 11",
+      "played": true,
+      "date": "2026-11-13T20:15:00",
+      "confirmedDate": true,
+      "confirmedHour": true,
+      "localTimeZone": 2,
+      "localDate": "2026-11-13T21:15:00",
+      "utcDate": "2026-11-13T19:15:00Z",
+      "local": {
+        "club": {
+          "code": "PAN",
+          "name": "Panathinaikos AKTOR Athens",
+          "abbreviatedName": "Panathinaikos",
+          "editorialName": "Panathinaikos",
+          "tvCode": "PAO",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/e3dff28a-9ec6-4faf-9d96-ecbc68f75780.png"
+          }
+        },
+        "score": 74,
+        "standingsScore": 74,
+        "partials": {
+          "partials1": 17,
+          "partials2": 16,
+          "partials3": 24,
+          "partials4": 17,
+          "extraPeriods": {}
+        }
+      },
+      "road": {
+        "club": {
+          "code": "BAR",
+          "name": "FC Barcelona",
+          "abbreviatedName": "FC Barcelona",
+          "editorialName": "Barca",
+          "tvCode": "BAR",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/35dfa503-e417-481f-963a-bdf6f013763e.png"
+          }
+        },
+        "score": 76,
+        "standingsScore": 76,
+        "partials": {
+          "partials1": 17,
+          "partials2": 15,
+          "partials3": 11,
+          "partials4": 33,
+          "extraPeriods": {}
+        }
+      },
+      "audience": 19073,
+      "audienceConfirmed": true,
+      "socialFeed": "",
+      "operationsCode": null,
+      "referee1": {
+        "code": "OJLL",
+        "name": "DIFALLAH, MEHDI",
+        "alias": "DIFALLAH, M.",
+        "country": { "code": "FRA", "name": "France" },
+        "images": { "verticalSmall": "87ytu4ivn6qtsqni" },
+        "active": true
+      },
+      "referee2": {
+        "code": "OJFC",
+        "name": "JAVOR, DAMIR",
+        "alias": "JAVOR, D.",
+        "country": { "code": "SLO", "name": "Slovenia" },
+        "images": { "verticalSmall": "883i7yokjhfy7pih" },
+        "active": true
+      },
+      "referee3": {
+        "code": "OACY",
+        "name": "JOVCIC, MILIVOJE",
+        "alias": "JOVCIC, M.",
+        "country": { "code": "SRB", "name": "Serbia" },
+        "images": { "verticalSmall": "8844kualjiu9jr5p" },
+        "active": true
+      },
+      "referee4": null,
+      "venue": {
+        "name": "TELEKOM CENTER ATHENS",
+        "code": "AUM6",
+        "capacity": 18500,
+        "address": "37 Kifisias Avenue, 15123 Marousi",
+        "images": { "medium": null },
+        "active": true,
+        "notes": ""
+      },
+      "isNeutralVenue": false,
+      "gameStatus": "Confirmed",
+      "winner": null
+    }
+  ],
+  "total": 4
+}

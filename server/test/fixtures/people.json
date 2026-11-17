@@ -1,1 +1,344 @@
-[{"person": {"code": "014213", "name": "PAYNE, CAMERON", "alias": "PAYNE, CAMERON", "aliasRaw": "PAYNE, CAMERON", "passportName": "CAMERON", "passportSurname": "PAYNE", "jerseyName": "PAYNE", "abbreviatedName": null, "country": {"code": "USA", "name": "United States of America"}, "height": 191, "weight": 83, "birthDate": "1994-08-08T00:00:00", "birthCountry": {"code": "USA", "name": "United States of America"}, "twitterAccount": "", "instagramAccount": "", "facebookAccount": "", "isReferee": false, "images": {}}, "type": "J", "typeName": "Player", "active": true, "startDate": "2026-10-07T15:09:46.869", "endDate": "2027-06-30T00:00:00", "order": 0, "dorsal": "22", "dorsalRaw": "22", "position": 1, "positionName": "Guard", "lastTeam": "PHILADELPHIA 76ERS", "externalId": 57059, "images": {"headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjHGF4xs/33183699-533f-4f6b-a10f-beec6af2277e.png", "action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjHGF4xs/33183699-533f-4f6b-a10f-beec6af2277e.png"}, "club": {"code": "IST", "name": "Anadolu Efes Istanbul", "abbreviatedName": "Anadolu Efes", "editorialName": "Efes", "tvCode": "EFS", "isVirtual": false, "images": {"crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"}}, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}}, {"person": {"code": "013422", "name": "FENEMEN, RUZGAR", "alias": "FENEMEN, R.", "aliasRaw": "FENEMEN, R.", "passportName": "RUZGAR", "passportSurname": "FENEMEN", "jerseyName": "RUZGAR", "abbreviatedName": "", "country": {"code": "TUR", "name": "Turkiye"}, "height": 185, "weight": 86, "birthDate": "2008-04-03T00:00:00", "birthCountry": {"code": "TUR", "name": "Turkiye"}, "twitterAccount": "", "instagramAccount": "", "facebookAccount": "", "isReferee": false, "images": {}}, "type": "J", "typeName": "Player", "active": true, "startDate": "2026-09-28T15:43:31.311", "endDate": "2027-06-30T00:00:00", "order": 0, "dorsal": "16", "dorsalRaw": "16", "position": 1, "positionName": "Guard", "lastTeam": "ANADOLU EFES ISTANBUL", "externalId": 57033, "images": {"action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/14cb197c-84c8-4b63-83f8-8b26e7cc30ea.png", "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/14cb197c-84c8-4b63-83f8-8b26e7cc30ea.png"}, "club": {"code": "IST", "name": "Anadolu Efes Istanbul", "abbreviatedName": "Anadolu Efes", "editorialName": "Efes", "tvCode": "EFS", "isVirtual": false, "images": {"crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"}}, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}}, {"person": {"code": "014102", "name": "JONES, KAI", "alias": "JONES, KAI", "aliasRaw": "JONES, KAI", "passportName": "KAI MARTINEZ", "passportSurname": "JONES", "jerseyName": "JONES", "abbreviatedName": null, "country": {"code": "BAH", "name": "Bahamas"}, "height": 211, "weight": 105, "birthDate": "2001-01-19T00:00:00", "birthCountry": {"code": "USA", "name": "United States of America"}, "twitterAccount": "", "instagramAccount": "", "facebookAccount": "", "isReferee": false, "images": {}}, "type": "J", "typeName": "Player", "active": true, "startDate": "2026-09-21T07:37:46.521", "endDate": "2027-06-30T00:00:00", "order": 0, "dorsal": "88", "dorsalRaw": "88", "position": 3, "positionName": "Center", "lastTeam": "ANADOLU EFES ISTANBUL", "externalId": 56877, "images": {"action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/f6863e93-e184-46e1-bae5-00166020bd7f.png", "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/f6863e93-e184-46e1-bae5-00166020bd7f.png"}, "club": {"code": "IST", "name": "Anadolu Efes Istanbul", "abbreviatedName": "Anadolu Efes", "editorialName": "Efes", "tvCode": "EFS", "isVirtual": false, "images": {"crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"}}, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}}, {"person": {"code": "005985", "name": "JAMES, MIKE", "alias": "James", "aliasRaw": "James", "passportName": "MICHAEL PERRY", "passportSurname": "JAMES", "jerseyName": "JAMES", "abbreviatedName": "James, M.", "country": {"code": "USA", "name": "United States of America"}, "height": 185, "weight": 90, "birthDate": "1990-08-18T00:00:00", "birthCountry": {"code": "USA", "name": "United States of America"}, "twitterAccount": "TheNatural_05", "instagramAccount": "mrnatural_05", "facebookAccount": "", "isReferee": false, "images": {}}, "type": "J", "typeName": "Player", "active": true, "startDate": "2026-09-17T14:35:17.264", "endDate": "2027-06-30T00:00:00", "order": 0, "dorsal": "55", "dorsalRaw": "55", "position": 1, "positionName": "Guard", "lastTeam": "AS MONACO BASKET", "externalId": 56804, "images": {"action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/286b3dbb-72aa-4f86-aa59-d254a86448c5.png", "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/286b3dbb-72aa-4f86-aa59-d254a86448c5.png"}, "club": {"code": "IST", "name": "Anadolu Efes Istanbul", "abbreviatedName": "Anadolu Efes", "editorialName": "Efes", "tvCode": "EFS", "isVirtual": false, "images": {"crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"}}, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}}, {"person": {"code": "008099", "name": "STRAZEL, MATTHEW", "alias": "STRAZEL, MATTHEW", "aliasRaw": "STRAZEL, MATTHEW", "passportName": "MATTHEW NELSON", "passportSurname": "STRAZEL", "jerseyName": "STRAZEL", "abbreviatedName": "Strazel, M.", "country": {"code": "FRA", "name": "France"}, "height": 184, "weight": 78, "birthDate": "2002-08-05T00:00:00", "birthCountry": {"code": "FRA", "name": "France"}, "twitterAccount": "", "instagramAccount": "mtwbucket32/", "facebookAccount": "", "isReferee": false, "images": {}}, "type": "J", "typeName": "Player", "active": true, "startDate": "2026-09-17T14:35:16.944", "endDate": "2027-06-30T00:00:00", "order": 0, "dorsal": "32", "dorsalRaw": "32", "position": 1, "positionName": "Guard", "lastTeam": "AS MONACO BASKET", "externalId": 56803, "images": {"action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/d299652d-429d-4226-89d6-8286c61c0533.png", "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/d299652d-429d-4226-89d6-8286c61c0533.png"}, "club": {"code": "IST", "name": "Anadolu Efes Istanbul", "abbreviatedName": "Anadolu Efes", "editorialName": "Efes", "tvCode": "EFS", "isVirtual": false, "images": {"crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"}}, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}}, {"person": {"code": "003112", "name": "SARIC, DARIO", "alias": "Saric", "aliasRaw": "Saric", "passportName": "DARIO", "passportSurname": "SARIC", "jerseyName": "SARIC", "abbreviatedName": "Saric, D.", "country": {"code": "CRO", "name": "Croatia"}, "height": 207, "weight": 101, "birthDate": "1994-04-08T00:00:00", "birthCountry": {"code": "CRO", "name": "Croatia"}, "twitterAccount": "", "instagramAccount": "", "facebookAccount": "", "isReferee": false, "images": {}}, "type": "J", "typeName": "Player", "active": true, "startDate": "2026-09-17T14:35:16.708", "endDate": "2027-06-30T00:00:00", "order": 0, "dorsal": "5", "dorsalRaw": "5", "position": 2, "positionName": "Forward", "lastTeam": "DETROIT PISTONS", "externalId": 56802, "images": {"action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/afdb2e3e-694e-44f2-a8d9-d97aa89dd86e.png", "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/afdb2e3e-694e-44f2-a8d9-d97aa89dd86e.png"}, "club": {"code": "IST", "name": "Anadolu Efes Istanbul", "abbreviatedName": "Anadolu Efes", "editorialName": "Efes", "tvCode": "EFS", "isVirtual": false, "images": {"crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"}}, "season": {"name": "EuroLeague 2026-27", "code": "E2026", "alias": "2026-27", "competitionCode": "E", "year": 2026, "startDate": "2026-07-01T00:00:00"}}]
+[
+  {
+    "person": {
+      "code": "014213",
+      "name": "PAYNE, CAMERON",
+      "alias": "PAYNE, CAMERON",
+      "aliasRaw": "PAYNE, CAMERON",
+      "passportName": "CAMERON",
+      "passportSurname": "PAYNE",
+      "jerseyName": "PAYNE",
+      "abbreviatedName": null,
+      "country": { "code": "USA", "name": "United States of America" },
+      "height": 191,
+      "weight": 83,
+      "birthDate": "1994-08-08T00:00:00",
+      "birthCountry": { "code": "USA", "name": "United States of America" },
+      "twitterAccount": "",
+      "instagramAccount": "",
+      "facebookAccount": "",
+      "isReferee": false,
+      "images": {}
+    },
+    "type": "J",
+    "typeName": "Player",
+    "active": true,
+    "startDate": "2026-10-07T15:09:46.869",
+    "endDate": "2027-06-30T00:00:00",
+    "order": 0,
+    "dorsal": "22",
+    "dorsalRaw": "22",
+    "position": 1,
+    "positionName": "Guard",
+    "lastTeam": "PHILADELPHIA 76ERS",
+    "externalId": 57059,
+    "images": {
+      "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjHGF4xs/33183699-533f-4f6b-a10f-beec6af2277e.png",
+      "action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjHGF4xs/33183699-533f-4f6b-a10f-beec6af2277e.png"
+    },
+    "club": {
+      "code": "IST",
+      "name": "Anadolu Efes Istanbul",
+      "abbreviatedName": "Anadolu Efes",
+      "editorialName": "Efes",
+      "tvCode": "EFS",
+      "isVirtual": false,
+      "images": {
+        "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+      }
+    },
+    "season": {
+      "name": "EuroLeague 2026-27",
+      "code": "E2026",
+      "alias": "2026-27",
+      "competitionCode": "E",
+      "year": 2026,
+      "startDate": "2026-07-01T00:00:00"
+    }
+  },
+  {
+    "person": {
+      "code": "013422",
+      "name": "FENEMEN, RUZGAR",
+      "alias": "FENEMEN, R.",
+      "aliasRaw": "FENEMEN, R.",
+      "passportName": "RUZGAR",
+      "passportSurname": "FENEMEN",
+      "jerseyName": "RUZGAR",
+      "abbreviatedName": "",
+      "country": { "code": "TUR", "name": "Turkiye" },
+      "height": 185,
+      "weight": 86,
+      "birthDate": "2008-04-03T00:00:00",
+      "birthCountry": { "code": "TUR", "name": "Turkiye" },
+      "twitterAccount": "",
+      "instagramAccount": "",
+      "facebookAccount": "",
+      "isReferee": false,
+      "images": {}
+    },
+    "type": "J",
+    "typeName": "Player",
+    "active": true,
+    "startDate": "2026-09-28T15:43:31.311",
+    "endDate": "2027-06-30T00:00:00",
+    "order": 0,
+    "dorsal": "16",
+    "dorsalRaw": "16",
+    "position": 1,
+    "positionName": "Guard",
+    "lastTeam": "ANADOLU EFES ISTANBUL",
+    "externalId": 57033,
+    "images": {
+      "action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/14cb197c-84c8-4b63-83f8-8b26e7cc30ea.png",
+      "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/14cb197c-84c8-4b63-83f8-8b26e7cc30ea.png"
+    },
+    "club": {
+      "code": "IST",
+      "name": "Anadolu Efes Istanbul",
+      "abbreviatedName": "Anadolu Efes",
+      "editorialName": "Efes",
+      "tvCode": "EFS",
+      "isVirtual": false,
+      "images": {
+        "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+      }
+    },
+    "season": {
+      "name": "EuroLeague 2026-27",
+      "code": "E2026",
+      "alias": "2026-27",
+      "competitionCode": "E",
+      "year": 2026,
+      "startDate": "2026-07-01T00:00:00"
+    }
+  },
+  {
+    "person": {
+      "code": "014102",
+      "name": "JONES, KAI",
+      "alias": "JONES, KAI",
+      "aliasRaw": "JONES, KAI",
+      "passportName": "KAI MARTINEZ",
+      "passportSurname": "JONES",
+      "jerseyName": "JONES",
+      "abbreviatedName": null,
+      "country": { "code": "BAH", "name": "Bahamas" },
+      "height": 211,
+      "weight": 105,
+      "birthDate": "2001-01-19T00:00:00",
+      "birthCountry": { "code": "USA", "name": "United States of America" },
+      "twitterAccount": "",
+      "instagramAccount": "",
+      "facebookAccount": "",
+      "isReferee": false,
+      "images": {}
+    },
+    "type": "J",
+    "typeName": "Player",
+    "active": true,
+    "startDate": "2026-09-21T07:37:46.521",
+    "endDate": "2027-06-30T00:00:00",
+    "order": 0,
+    "dorsal": "88",
+    "dorsalRaw": "88",
+    "position": 3,
+    "positionName": "Center",
+    "lastTeam": "ANADOLU EFES ISTANBUL",
+    "externalId": 56877,
+    "images": {
+      "action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/f6863e93-e184-46e1-bae5-00166020bd7f.png",
+      "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/f6863e93-e184-46e1-bae5-00166020bd7f.png"
+    },
+    "club": {
+      "code": "IST",
+      "name": "Anadolu Efes Istanbul",
+      "abbreviatedName": "Anadolu Efes",
+      "editorialName": "Efes",
+      "tvCode": "EFS",
+      "isVirtual": false,
+      "images": {
+        "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+      }
+    },
+    "season": {
+      "name": "EuroLeague 2026-27",
+      "code": "E2026",
+      "alias": "2026-27",
+      "competitionCode": "E",
+      "year": 2026,
+      "startDate": "2026-07-01T00:00:00"
+    }
+  },
+  {
+    "person": {
+      "code": "005985",
+      "name": "JAMES, MIKE",
+      "alias": "James",
+      "aliasRaw": "James",
+      "passportName": "MICHAEL PERRY",
+      "passportSurname": "JAMES",
+      "jerseyName": "JAMES",
+      "abbreviatedName": "James, M.",
+      "country": { "code": "USA", "name": "United States of America" },
+      "height": 185,
+      "weight": 90,
+      "birthDate": "1990-08-18T00:00:00",
+      "birthCountry": { "code": "USA", "name": "United States of America" },
+      "twitterAccount": "TheNatural_05",
+      "instagramAccount": "mrnatural_05",
+      "facebookAccount": "",
+      "isReferee": false,
+      "images": {}
+    },
+    "type": "J",
+    "typeName": "Player",
+    "active": true,
+    "startDate": "2026-09-17T14:35:17.264",
+    "endDate": "2027-06-30T00:00:00",
+    "order": 0,
+    "dorsal": "55",
+    "dorsalRaw": "55",
+    "position": 1,
+    "positionName": "Guard",
+    "lastTeam": "AS MONACO BASKET",
+    "externalId": 56804,
+    "images": {
+      "action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/286b3dbb-72aa-4f86-aa59-d254a86448c5.png",
+      "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/286b3dbb-72aa-4f86-aa59-d254a86448c5.png"
+    },
+    "club": {
+      "code": "IST",
+      "name": "Anadolu Efes Istanbul",
+      "abbreviatedName": "Anadolu Efes",
+      "editorialName": "Efes",
+      "tvCode": "EFS",
+      "isVirtual": false,
+      "images": {
+        "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+      }
+    },
+    "season": {
+      "name": "EuroLeague 2026-27",
+      "code": "E2026",
+      "alias": "2026-27",
+      "competitionCode": "E",
+      "year": 2026,
+      "startDate": "2026-07-01T00:00:00"
+    }
+  },
+  {
+    "person": {
+      "code": "008099",
+      "name": "STRAZEL, MATTHEW",
+      "alias": "STRAZEL, MATTHEW",
+      "aliasRaw": "STRAZEL, MATTHEW",
+      "passportName": "MATTHEW NELSON",
+      "passportSurname": "STRAZEL",
+      "jerseyName": "STRAZEL",
+      "abbreviatedName": "Strazel, M.",
+      "country": { "code": "FRA", "name": "France" },
+      "height": 184,
+      "weight": 78,
+      "birthDate": "2002-08-05T00:00:00",
+      "birthCountry": { "code": "FRA", "name": "France" },
+      "twitterAccount": "",
+      "instagramAccount": "mtwbucket32/",
+      "facebookAccount": "",
+      "isReferee": false,
+      "images": {}
+    },
+    "type": "J",
+    "typeName": "Player",
+    "active": true,
+    "startDate": "2026-09-17T14:35:16.944",
+    "endDate": "2027-06-30T00:00:00",
+    "order": 0,
+    "dorsal": "32",
+    "dorsalRaw": "32",
+    "position": 1,
+    "positionName": "Guard",
+    "lastTeam": "AS MONACO BASKET",
+    "externalId": 56803,
+    "images": {
+      "action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/d299652d-429d-4226-89d6-8286c61c0533.png",
+      "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/d299652d-429d-4226-89d6-8286c61c0533.png"
+    },
+    "club": {
+      "code": "IST",
+      "name": "Anadolu Efes Istanbul",
+      "abbreviatedName": "Anadolu Efes",
+      "editorialName": "Efes",
+      "tvCode": "EFS",
+      "isVirtual": false,
+      "images": {
+        "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+      }
+    },
+    "season": {
+      "name": "EuroLeague 2026-27",
+      "code": "E2026",
+      "alias": "2026-27",
+      "competitionCode": "E",
+      "year": 2026,
+      "startDate": "2026-07-01T00:00:00"
+    }
+  },
+  {
+    "person": {
+      "code": "003112",
+      "name": "SARIC, DARIO",
+      "alias": "Saric",
+      "aliasRaw": "Saric",
+      "passportName": "DARIO",
+      "passportSurname": "SARIC",
+      "jerseyName": "SARIC",
+      "abbreviatedName": "Saric, D.",
+      "country": { "code": "CRO", "name": "Croatia" },
+      "height": 207,
+      "weight": 101,
+      "birthDate": "1994-04-08T00:00:00",
+      "birthCountry": { "code": "CRO", "name": "Croatia" },
+      "twitterAccount": "",
+      "instagramAccount": "",
+      "facebookAccount": "",
+      "isReferee": false,
+      "images": {}
+    },
+    "type": "J",
+    "typeName": "Player",
+    "active": true,
+    "startDate": "2026-09-17T14:35:16.708",
+    "endDate": "2027-06-30T00:00:00",
+    "order": 0,
+    "dorsal": "5",
+    "dorsalRaw": "5",
+    "position": 2,
+    "positionName": "Forward",
+    "lastTeam": "DETROIT PISTONS",
+    "externalId": 56802,
+    "images": {
+      "action": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/afdb2e3e-694e-44f2-a8d9-d97aa89dd86e.png",
+      "headshot": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCjnONz/afdb2e3e-694e-44f2-a8d9-d97aa89dd86e.png"
+    },
+    "club": {
+      "code": "IST",
+      "name": "Anadolu Efes Istanbul",
+      "abbreviatedName": "Anadolu Efes",
+      "editorialName": "Efes",
+      "tvCode": "EFS",
+      "isVirtual": false,
+      "images": {
+        "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+      }
+    },
+    "season": {
+      "name": "EuroLeague 2026-27",
+      "code": "E2026",
+      "alias": "2026-27",
+      "competitionCode": "E",
+      "year": 2026,
+      "startDate": "2026-07-01T00:00:00"
+    }
+  }
+]

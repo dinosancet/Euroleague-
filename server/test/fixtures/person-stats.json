@@ -1,0 +1,1040 @@
+{
+  "games": [
+    {
+      "game": {
+        "gameCode": 40,
+        "season": {
+          "name": "EuroLeague 2026-27",
+          "code": "E2026",
+          "alias": "2026-27",
+          "competitionCode": "E",
+          "year": 2026,
+          "startDate": "2026-07-01T00:00:00"
+        },
+        "group": {
+          "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 4,
+        "roundAlias": "Round 4",
+        "roundName": "Round 4",
+        "played": true,
+        "date": "2026-10-09T20:15:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 1,
+        "localDate": "2026-10-09T21:15:00",
+        "utcDate": "2026-10-09T18:15:00Z",
+        "local": {
+          "club": {
+            "code": "OLY",
+            "name": "Olympiacos Piraeus",
+            "abbreviatedName": "Olympiacos",
+            "editorialName": "Olympiacos",
+            "tvCode": "OLY",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"
+            }
+          },
+          "score": 89,
+          "standingsScore": 89
+        },
+        "road": {
+          "club": {
+            "code": "IST",
+            "name": "Anadolu Efes Istanbul",
+            "abbreviatedName": "Anadolu Efes",
+            "editorialName": "Efes",
+            "tvCode": "EFS",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+            }
+          },
+          "score": 66,
+          "standingsScore": 66
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "OLY",
+          "name": "Olympiacos Piraeus",
+          "abbreviatedName": "Olympiacos",
+          "editorialName": "Olympiacos",
+          "tvCode": "OLY",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 841.0,
+        "valuation": 9.0,
+        "points": 12.0,
+        "fieldGoalsMade2": 1.0,
+        "fieldGoalsAttempted2": 2.0,
+        "fieldGoalsMade3": 3.0,
+        "fieldGoalsAttempted3": 5.0,
+        "freeThrowsMade": 1.0,
+        "freeThrowsAttempted": 2.0,
+        "fieldGoalsMadeTotal": 4.0,
+        "fieldGoalsAttemptedTotal": 7.0,
+        "accuracyMade": 12.0,
+        "accuracyAttempted": 21.0,
+        "totalRebounds": 2.0,
+        "defensiveRebounds": 2.0,
+        "offensiveRebounds": 0.0,
+        "assistances": 3.0,
+        "steals": 1.0,
+        "turnovers": 2.0,
+        "blocksFavour": 0.0,
+        "blocksAgainst": 0.0,
+        "foulsCommited": 4.0,
+        "foulsReceived": 1.0,
+        "plusMinus": -7.0,
+        "dorsal": 0,
+        "startFive": false,
+        "startFive2": false
+      },
+      "playerClubCode": "IST"
+    },
+    {
+      "game": {
+        "gameCode": 49,
+        "season": {
+          "name": "EuroLeague 2026-27",
+          "code": "E2026",
+          "alias": "2026-27",
+          "competitionCode": "E",
+          "year": 2026,
+          "startDate": "2026-07-01T00:00:00"
+        },
+        "group": {
+          "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 5,
+        "roundAlias": "Round 5",
+        "roundName": "Round 5",
+        "played": true,
+        "date": "2026-10-14T19:30:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 1,
+        "localDate": "2026-10-14T20:30:00",
+        "utcDate": "2026-10-14T17:30:00Z",
+        "local": {
+          "club": {
+            "code": "IST",
+            "name": "Anadolu Efes Istanbul",
+            "abbreviatedName": "Anadolu Efes",
+            "editorialName": "Efes",
+            "tvCode": "EFS",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+            }
+          },
+          "score": 93,
+          "standingsScore": 93
+        },
+        "road": {
+          "club": {
+            "code": "MUN",
+            "name": "FC Bayern Munich",
+            "abbreviatedName": "Bayern Munich",
+            "editorialName": "Bayern",
+            "tvCode": "BAY",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.incrowdsports.com/817b0e58-d595-4b09-ab0b-1e7cc26249ff.png"
+            }
+          },
+          "score": 101,
+          "standingsScore": 101
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "MUN",
+          "name": "FC Bayern Munich",
+          "abbreviatedName": "Bayern Munich",
+          "editorialName": "Bayern",
+          "tvCode": "BAY",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/817b0e58-d595-4b09-ab0b-1e7cc26249ff.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 1226.0,
+        "valuation": 10.0,
+        "points": 18.0,
+        "fieldGoalsMade2": 2.0,
+        "fieldGoalsAttempted2": 4.0,
+        "fieldGoalsMade3": 4.0,
+        "fieldGoalsAttempted3": 7.0,
+        "freeThrowsMade": 2.0,
+        "freeThrowsAttempted": 2.0,
+        "fieldGoalsMadeTotal": 6.0,
+        "fieldGoalsAttemptedTotal": 11.0,
+        "accuracyMade": 18.0,
+        "accuracyAttempted": 31.0,
+        "totalRebounds": 1.0,
+        "defensiveRebounds": 1.0,
+        "offensiveRebounds": 0.0,
+        "assistances": 4.0,
+        "steals": 1.0,
+        "turnovers": 5.0,
+        "blocksFavour": 0.0,
+        "blocksAgainst": 0.0,
+        "foulsCommited": 5.0,
+        "foulsReceived": 1.0,
+        "plusMinus": -4.0,
+        "dorsal": 0,
+        "startFive": true,
+        "startFive2": false
+      },
+      "playerClubCode": "IST"
+    },
+    {
+      "game": {
+        "gameCode": 57,
+        "season": {
+          "name": "EuroLeague 2026-27",
+          "code": "E2026",
+          "alias": "2026-27",
+          "competitionCode": "E",
+          "year": 2026,
+          "startDate": "2026-07-01T00:00:00"
+        },
+        "group": {
+          "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 6,
+        "roundAlias": "Round 6",
+        "roundName": "Round 6",
+        "played": true,
+        "date": "2026-10-16T19:00:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 1,
+        "localDate": "2026-10-16T20:00:00",
+        "utcDate": "2026-10-16T17:00:00Z",
+        "local": {
+          "club": {
+            "code": "ZAL",
+            "name": "Zalgiris Kaunas",
+            "abbreviatedName": "Zalgiris",
+            "editorialName": "Zalgiris",
+            "tvCode": "ZAL",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.incrowdsports.com/0aa09358-3847-4c4e-b228-3582ee4e536d.png"
+            }
+          },
+          "score": 70,
+          "standingsScore": 70
+        },
+        "road": {
+          "club": {
+            "code": "IST",
+            "name": "Anadolu Efes Istanbul",
+            "abbreviatedName": "Anadolu Efes",
+            "editorialName": "Efes",
+            "tvCode": "EFS",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+            }
+          },
+          "score": 85,
+          "standingsScore": 85
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "IST",
+          "name": "Anadolu Efes Istanbul",
+          "abbreviatedName": "Anadolu Efes",
+          "editorialName": "Efes",
+          "tvCode": "EFS",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 1251.0,
+        "valuation": 13.0,
+        "points": 16.0,
+        "fieldGoalsMade2": 2.0,
+        "fieldGoalsAttempted2": 3.0,
+        "fieldGoalsMade3": 3.0,
+        "fieldGoalsAttempted3": 7.0,
+        "freeThrowsMade": 3.0,
+        "freeThrowsAttempted": 5.0,
+        "fieldGoalsMadeTotal": 5.0,
+        "fieldGoalsAttemptedTotal": 10.0,
+        "accuracyMade": 16.0,
+        "accuracyAttempted": 32.0,
+        "totalRebounds": 1.0,
+        "defensiveRebounds": 1.0,
+        "offensiveRebounds": 0.0,
+        "assistances": 4.0,
+        "steals": 1.0,
+        "turnovers": 3.0,
+        "blocksFavour": 0.0,
+        "blocksAgainst": 0.0,
+        "foulsCommited": 3.0,
+        "foulsReceived": 4.0,
+        "plusMinus": 2.0,
+        "dorsal": 0,
+        "startFive": true,
+        "startFive2": false
+      },
+      "playerClubCode": "IST"
+    },
+    {
+      "game": {
+        "gameCode": 64,
+        "season": {
+          "name": "EuroLeague 2026-27",
+          "code": "E2026",
+          "alias": "2026-27",
+          "competitionCode": "E",
+          "year": 2026,
+          "startDate": "2026-07-01T00:00:00"
+        },
+        "group": {
+          "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 7,
+        "roundAlias": "Round 7",
+        "roundName": "Round 7",
+        "played": true,
+        "date": "2026-10-22T19:30:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 1,
+        "localDate": "2026-10-22T20:30:00",
+        "utcDate": "2026-10-22T17:30:00Z",
+        "local": {
+          "club": {
+            "code": "IST",
+            "name": "Anadolu Efes Istanbul",
+            "abbreviatedName": "Anadolu Efes",
+            "editorialName": "Efes",
+            "tvCode": "EFS",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+            }
+          },
+          "score": 89,
+          "standingsScore": 89
+        },
+        "road": {
+          "club": {
+            "code": "BES",
+            "name": "Besiktas Istanbul",
+            "abbreviatedName": "Besiktas",
+            "editorialName": "Besiktas",
+            "tvCode": "BJK",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjChWbHH/b05e3c54-e672-4b31-9f86-c91e9de7715c.png"
+            }
+          },
+          "score": 80,
+          "standingsScore": 80
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "IST",
+          "name": "Anadolu Efes Istanbul",
+          "abbreviatedName": "Anadolu Efes",
+          "editorialName": "Efes",
+          "tvCode": "EFS",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 1390.0,
+        "valuation": 19.0,
+        "points": 22.0,
+        "fieldGoalsMade2": 3.0,
+        "fieldGoalsAttempted2": 4.0,
+        "fieldGoalsMade3": 4.0,
+        "fieldGoalsAttempted3": 6.0,
+        "freeThrowsMade": 4.0,
+        "freeThrowsAttempted": 4.0,
+        "fieldGoalsMadeTotal": 7.0,
+        "fieldGoalsAttemptedTotal": 10.0,
+        "accuracyMade": 22.0,
+        "accuracyAttempted": 30.0,
+        "totalRebounds": 0.0,
+        "defensiveRebounds": 0.0,
+        "offensiveRebounds": 0.0,
+        "assistances": 1.0,
+        "steals": 1.0,
+        "turnovers": 3.0,
+        "blocksFavour": 0.0,
+        "blocksAgainst": 0.0,
+        "foulsCommited": 3.0,
+        "foulsReceived": 4.0,
+        "plusMinus": 0.0,
+        "dorsal": 0,
+        "startFive": true,
+        "startFive2": false
+      },
+      "playerClubCode": "IST"
+    },
+    {
+      "game": {
+        "gameCode": 77,
+        "season": {
+          "name": "EuroLeague 2026-27",
+          "code": "E2026",
+          "alias": "2026-27",
+          "competitionCode": "E",
+          "year": 2026,
+          "startDate": "2026-07-01T00:00:00"
+        },
+        "group": {
+          "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 8,
+        "roundAlias": "Round 8",
+        "roundName": "Round 8",
+        "played": true,
+        "date": "2026-10-28T19:00:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 1,
+        "localDate": "2026-10-28T20:00:00",
+        "utcDate": "2026-10-28T18:00:00Z",
+        "local": {
+          "club": {
+            "code": "HTA",
+            "name": "Hapoel IBI Tel Aviv",
+            "abbreviatedName": "Hapoel TLV",
+            "editorialName": "Hapoel",
+            "tvCode": "HTA",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.incrowdsports.com/cbb1c3ad-03d5-426a-b5ef-2832a4eee484.png"
+            }
+          },
+          "score": 118,
+          "standingsScore": 118
+        },
+        "road": {
+          "club": {
+            "code": "IST",
+            "name": "Anadolu Efes Istanbul",
+            "abbreviatedName": "Anadolu Efes",
+            "editorialName": "Efes",
+            "tvCode": "EFS",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+            }
+          },
+          "score": 88,
+          "standingsScore": 88
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "HTA",
+          "name": "Hapoel IBI Tel Aviv",
+          "abbreviatedName": "Hapoel TLV",
+          "editorialName": "Hapoel",
+          "tvCode": "HTA",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/cbb1c3ad-03d5-426a-b5ef-2832a4eee484.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 1094.0,
+        "valuation": 1.0,
+        "points": 8.0,
+        "fieldGoalsMade2": 0.0,
+        "fieldGoalsAttempted2": 1.0,
+        "fieldGoalsMade3": 2.0,
+        "fieldGoalsAttempted3": 6.0,
+        "freeThrowsMade": 2.0,
+        "freeThrowsAttempted": 3.0,
+        "fieldGoalsMadeTotal": 2.0,
+        "fieldGoalsAttemptedTotal": 7.0,
+        "accuracyMade": 8.0,
+        "accuracyAttempted": 23.0,
+        "totalRebounds": 0.0,
+        "defensiveRebounds": 0.0,
+        "offensiveRebounds": 0.0,
+        "assistances": 4.0,
+        "steals": 0.0,
+        "turnovers": 5.0,
+        "blocksFavour": 0.0,
+        "blocksAgainst": 0.0,
+        "foulsCommited": 3.0,
+        "foulsReceived": 3.0,
+        "plusMinus": -25.0,
+        "dorsal": 0,
+        "startFive": true,
+        "startFive2": false
+      },
+      "playerClubCode": "IST"
+    },
+    {
+      "game": {
+        "gameCode": 88,
+        "season": {
+          "name": "EuroLeague 2026-27",
+          "code": "E2026",
+          "alias": "2026-27",
+          "competitionCode": "E",
+          "year": 2026,
+          "startDate": "2026-07-01T00:00:00"
+        },
+        "group": {
+          "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 9,
+        "roundAlias": "Round 9",
+        "roundName": "Round 9",
+        "played": true,
+        "date": "2026-10-30T18:30:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 2,
+        "localDate": "2026-10-30T20:30:00",
+        "utcDate": "2026-10-30T17:30:00Z",
+        "local": {
+          "club": {
+            "code": "IST",
+            "name": "Anadolu Efes Istanbul",
+            "abbreviatedName": "Anadolu Efes",
+            "editorialName": "Efes",
+            "tvCode": "EFS",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+            }
+          },
+          "score": 83,
+          "standingsScore": 83
+        },
+        "road": {
+          "club": {
+            "code": "PAN",
+            "name": "Panathinaikos AKTOR Athens",
+            "abbreviatedName": "Panathinaikos",
+            "editorialName": "Panathinaikos",
+            "tvCode": "PAO",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.incrowdsports.com/e3dff28a-9ec6-4faf-9d96-ecbc68f75780.png"
+            }
+          },
+          "score": 68,
+          "standingsScore": 68
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "IST",
+          "name": "Anadolu Efes Istanbul",
+          "abbreviatedName": "Anadolu Efes",
+          "editorialName": "Efes",
+          "tvCode": "EFS",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 1476.0,
+        "valuation": 15.0,
+        "points": 14.0,
+        "fieldGoalsMade2": 1.0,
+        "fieldGoalsAttempted2": 5.0,
+        "fieldGoalsMade3": 4.0,
+        "fieldGoalsAttempted3": 11.0,
+        "freeThrowsMade": 0.0,
+        "freeThrowsAttempted": 0.0,
+        "fieldGoalsMadeTotal": 5.0,
+        "fieldGoalsAttemptedTotal": 16.0,
+        "accuracyMade": 14.0,
+        "accuracyAttempted": 43.0,
+        "totalRebounds": 1.0,
+        "defensiveRebounds": 1.0,
+        "offensiveRebounds": 0.0,
+        "assistances": 8.0,
+        "steals": 3.0,
+        "turnovers": 0.0,
+        "blocksFavour": 1.0,
+        "blocksAgainst": 1.0,
+        "foulsCommited": 3.0,
+        "foulsReceived": 3.0,
+        "plusMinus": 27.0,
+        "dorsal": 0,
+        "startFive": true,
+        "startFive2": false
+      },
+      "playerClubCode": "IST"
+    },
+    {
+      "game": {
+        "gameCode": 95,
+        "season": {
+          "name": "EuroLeague 2026-27",
+          "code": "E2026",
+          "alias": "2026-27",
+          "competitionCode": "E",
+          "year": 2026,
+          "startDate": "2026-07-01T00:00:00"
+        },
+        "group": {
+          "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 10,
+        "roundAlias": "Round 10",
+        "roundName": "Round 10",
+        "played": true,
+        "date": "2026-11-05T18:15:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 2,
+        "localDate": "2026-11-05T20:15:00",
+        "utcDate": "2026-11-05T17:15:00Z",
+        "local": {
+          "club": {
+            "code": "IST",
+            "name": "Anadolu Efes Istanbul",
+            "abbreviatedName": "Anadolu Efes",
+            "editorialName": "Efes",
+            "tvCode": "EFS",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+            }
+          },
+          "score": 90,
+          "standingsScore": 90
+        },
+        "road": {
+          "club": {
+            "code": "PRS",
+            "name": "Paris Basketball",
+            "abbreviatedName": "Paris",
+            "editorialName": "Paris",
+            "tvCode": "PBB",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.incrowdsports.com/a033e5b3-0de7-48a3-98d9-d9a4b9df1f39.png"
+            }
+          },
+          "score": 95,
+          "standingsScore": 95
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "PRS",
+          "name": "Paris Basketball",
+          "abbreviatedName": "Paris",
+          "editorialName": "Paris",
+          "tvCode": "PBB",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/a033e5b3-0de7-48a3-98d9-d9a4b9df1f39.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 1805.0,
+        "valuation": 29.0,
+        "points": 33.0,
+        "fieldGoalsMade2": 5.0,
+        "fieldGoalsAttempted2": 10.0,
+        "fieldGoalsMade3": 7.0,
+        "fieldGoalsAttempted3": 13.0,
+        "freeThrowsMade": 2.0,
+        "freeThrowsAttempted": 3.0,
+        "fieldGoalsMadeTotal": 12.0,
+        "fieldGoalsAttemptedTotal": 23.0,
+        "accuracyMade": 33.0,
+        "accuracyAttempted": 62.0,
+        "totalRebounds": 2.0,
+        "defensiveRebounds": 2.0,
+        "offensiveRebounds": 0.0,
+        "assistances": 7.0,
+        "steals": 1.0,
+        "turnovers": 2.0,
+        "blocksFavour": 0.0,
+        "blocksAgainst": 1.0,
+        "foulsCommited": 3.0,
+        "foulsReceived": 4.0,
+        "plusMinus": 0.0,
+        "dorsal": 0,
+        "startFive": true,
+        "startFive2": false
+      },
+      "playerClubCode": "IST"
+    },
+    {
+      "game": {
+        "gameCode": 109,
+        "season": {
+          "name": "EuroLeague 2026-27",
+          "code": "E2026",
+          "alias": "2026-27",
+          "competitionCode": "E",
+          "year": 2026,
+          "startDate": "2026-07-01T00:00:00"
+        },
+        "group": {
+          "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 11,
+        "roundAlias": "Round 11",
+        "roundName": "Round 11",
+        "played": true,
+        "date": "2026-11-13T18:30:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 2,
+        "localDate": "2026-11-13T20:30:00",
+        "utcDate": "2026-11-13T17:30:00Z",
+        "local": {
+          "club": {
+            "code": "IST",
+            "name": "Anadolu Efes Istanbul",
+            "abbreviatedName": "Anadolu Efes",
+            "editorialName": "Efes",
+            "tvCode": "EFS",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+            }
+          },
+          "score": 103,
+          "standingsScore": 103
+        },
+        "road": {
+          "club": {
+            "code": "VIR",
+            "name": "Virtus Bologna",
+            "abbreviatedName": "Virtus Bologna",
+            "editorialName": "Virtus",
+            "tvCode": "VIR",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCiezvk/a92d4c3b-9f9c-4163-8a10-bcf8fc15893e.png"
+            }
+          },
+          "score": 91,
+          "standingsScore": 91
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "IST",
+          "name": "Anadolu Efes Istanbul",
+          "abbreviatedName": "Anadolu Efes",
+          "editorialName": "Efes",
+          "tvCode": "EFS",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 1236.0,
+        "valuation": 9.0,
+        "points": 9.0,
+        "fieldGoalsMade2": 0.0,
+        "fieldGoalsAttempted2": 1.0,
+        "fieldGoalsMade3": 3.0,
+        "fieldGoalsAttempted3": 7.0,
+        "freeThrowsMade": 0.0,
+        "freeThrowsAttempted": 0.0,
+        "fieldGoalsMadeTotal": 3.0,
+        "fieldGoalsAttemptedTotal": 8.0,
+        "accuracyMade": 9.0,
+        "accuracyAttempted": 23.0,
+        "totalRebounds": 0.0,
+        "defensiveRebounds": 0.0,
+        "offensiveRebounds": 0.0,
+        "assistances": 8.0,
+        "steals": 1.0,
+        "turnovers": 0.0,
+        "blocksFavour": 0.0,
+        "blocksAgainst": 1.0,
+        "foulsCommited": 4.0,
+        "foulsReceived": 1.0,
+        "plusMinus": -7.0,
+        "dorsal": 0,
+        "startFive": true,
+        "startFive2": false
+      },
+      "playerClubCode": "IST"
+    },
+    {
+      "game": {
+        "gameCode": 111,
+        "season": {
+          "name": "EuroLeague 2026-27",
+          "code": "E2026",
+          "alias": "2026-27",
+          "competitionCode": "E",
+          "year": 2026,
+          "startDate": "2026-07-01T00:00:00"
+        },
+        "group": {
+          "id": "c3243224-039c-4e93-9e16-12a7f4b2d383",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 12,
+        "roundAlias": "Round 12",
+        "roundName": "Round 12",
+        "played": true,
+        "date": "2026-11-17T17:00:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 3,
+        "localDate": "2026-11-17T20:00:00",
+        "utcDate": "2026-11-17T16:00:00Z",
+        "local": {
+          "club": {
+            "code": "DUB",
+            "name": "Dubai Basketball",
+            "abbreviatedName": "Dubai",
+            "editorialName": "Dubai",
+            "tvCode": "DUB",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.incrowdsports.com/1efae090-16e2-4963-ae47-4b94f249c244.png"
+            }
+          },
+          "score": 80,
+          "standingsScore": 80
+        },
+        "road": {
+          "club": {
+            "code": "IST",
+            "name": "Anadolu Efes Istanbul",
+            "abbreviatedName": "Anadolu Efes",
+            "editorialName": "Efes",
+            "tvCode": "EFS",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/1dU3kpCqReRp93/1BSdBWIjCgOCxM/a844756c-a58d-4666-93b8-48f7337bc79d.png"
+            }
+          },
+          "score": 75,
+          "standingsScore": 75
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "DUB",
+          "name": "Dubai Basketball",
+          "abbreviatedName": "Dubai",
+          "editorialName": "Dubai",
+          "tvCode": "DUB",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.incrowdsports.com/1efae090-16e2-4963-ae47-4b94f249c244.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 1194.0,
+        "valuation": 5.0,
+        "points": 5.0,
+        "fieldGoalsMade2": 1.0,
+        "fieldGoalsAttempted2": 4.0,
+        "fieldGoalsMade3": 1.0,
+        "fieldGoalsAttempted3": 3.0,
+        "freeThrowsMade": 0.0,
+        "freeThrowsAttempted": 0.0,
+        "fieldGoalsMadeTotal": 2.0,
+        "fieldGoalsAttemptedTotal": 7.0,
+        "accuracyMade": 5.0,
+        "accuracyAttempted": 17.0,
+        "totalRebounds": 1.0,
+        "defensiveRebounds": 1.0,
+        "offensiveRebounds": 0.0,
+        "assistances": 6.0,
+        "steals": 1.0,
+        "turnovers": 3.0,
+        "blocksFavour": 0.0,
+        "blocksAgainst": 0.0,
+        "foulsCommited": 3.0,
+        "foulsReceived": 3.0,
+        "plusMinus": -7.0,
+        "dorsal": 0,
+        "startFive": true,
+        "startFive2": false
+      },
+      "playerClubCode": "IST"
+    }
+  ],
+  "accumulated": {
+    "timePlayed": 11513.0,
+    "valuation": 110.0,
+    "points": 137.0,
+    "fieldGoalsMade2": 15.0,
+    "fieldGoalsAttempted2": 34.0,
+    "fieldGoalsMade3": 31.0,
+    "fieldGoalsAttempted3": 65.0,
+    "freeThrowsMade": 14.0,
+    "freeThrowsAttempted": 19.0,
+    "fieldGoalsMadeTotal": 46.0,
+    "fieldGoalsAttemptedTotal": 99.0,
+    "accuracyMade": 137.0,
+    "accuracyAttempted": 282.0,
+    "totalRebounds": 8.0,
+    "defensiveRebounds": 8.0,
+    "offensiveRebounds": 0.0,
+    "assistances": 45.0,
+    "steals": 10.0,
+    "turnovers": 23.0,
+    "blocksFavour": 1.0,
+    "blocksAgainst": 3.0,
+    "foulsCommited": 31.0,
+    "foulsReceived": 24.0,
+    "plusMinus": -21.0,
+    "gamesPlayed": 9,
+    "gamesStarted": 8.0,
+    "totalGamesStarted": 8,
+    "threePointShootingPercentage": "47.7%",
+    "twoPointShootingPercentage": "44.1%",
+    "freeThrowShootingPercentage": "73.7%"
+  },
+  "averagePerGame": {
+    "timePlayed": 1279.2,
+    "valuation": 12.2,
+    "points": 15.2,
+    "fieldGoalsMade2": 1.7,
+    "fieldGoalsAttempted2": 3.8,
+    "fieldGoalsMade3": 3.4,
+    "fieldGoalsAttempted3": 7.2,
+    "freeThrowsMade": 1.6,
+    "freeThrowsAttempted": 2.1,
+    "fieldGoalsMadeTotal": 5.1,
+    "fieldGoalsAttemptedTotal": 11.0,
+    "accuracyMade": 15.2,
+    "accuracyAttempted": 31.3,
+    "totalRebounds": 0.9,
+    "defensiveRebounds": 0.9,
+    "offensiveRebounds": 0.0,
+    "assistances": 5.0,
+    "steals": 1.1,
+    "turnovers": 2.6,
+    "blocksFavour": 0.1,
+    "blocksAgainst": 0.3,
+    "foulsCommited": 3.4,
+    "foulsReceived": 2.7,
+    "plusMinus": -2.3,
+    "gamesPlayed": 9,
+    "gamesStarted": 0.9,
+    "totalGamesStarted": 8,
+    "threePointShootingPercentage": "47.7%",
+    "twoPointShootingPercentage": "44.1%",
+    "freeThrowShootingPercentage": "73.7%"
+  }
+}

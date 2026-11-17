@@ -18,6 +18,12 @@ import {
 
 import { LoadState } from "@/components/load-state";
 import {
+  STAT_COLUMNS,
+  StatLegend,
+  StatTable,
+  statCells,
+} from "@/components/stat-table";
+import {
   Chip,
   CompareRow,
   Empty,
@@ -108,7 +114,11 @@ function Header({ game }: { game: ApiGame }) {
           </Num>
           {game.status === "live" ? (
             <LivePill
-              label={`Live · ${game.period && game.period > 4 ? "OT" : `Q${game.period ?? ""}`} ${game.clock ?? ""}`}
+              label={
+                !game.period
+                  ? "Live · Pause"
+                  : `Live · ${game.period > 4 ? "OT" : `Q${game.period}`} ${game.clock ?? ""}`
+              }
             />
           ) : (
             <Text style={s.midSmall}>
@@ -148,6 +158,10 @@ function Header({ game }: { game: ApiGame }) {
   );
 }
 
+const openPlayer = (id: string) => {
+  if (id) router.push({ pathname: "/player/[id]", params: { id } });
+};
+
 const topScorer = (lines: ApiPlayerLine[]) =>
   lines.reduce<ApiPlayerLine | null>(
     (m, r) => (!m || r.points > m.points ? r : m),
@@ -164,6 +178,7 @@ function Overview({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
   ];
   return (
     <>
+      {game.status === "live" && <OnCourt game={game} box={box} />}
       <SectionHeader title="Teamvergleich" />
       <View style={s.cmp}>
         <CompareRow
@@ -173,10 +188,21 @@ function Overview({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
         />
         <CompareRow label="Assists" home={home.assists} away={away.assists} />
         <CompareRow
-          label="Dreier"
-          home={home.threesMade}
-          away={away.threesMade}
+          label="Zweier getroffen"
+          home={home.twos[0]}
+          away={away.twos[0]}
         />
+        <CompareRow
+          label="Dreier getroffen"
+          home={home.threes[0]}
+          away={away.threes[0]}
+        />
+        <CompareRow
+          label="Freiwürfe getroffen"
+          home={home.freeThrows[0]}
+          away={away.freeThrows[0]}
+        />
+        <CompareRow label="Blocks" home={home.blocks} away={away.blocks} />
         <CompareRow label="Steals" home={home.steals} away={away.steals} />
         <CompareRow
           label="Ballverluste"
@@ -189,7 +215,12 @@ function Overview({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
       <View style={s.list}>
         {tops.map(([r, t]) =>
           r ? (
-            <View key={t.code} style={s.player}>
+            <Pressable
+              key={t.code}
+              style={s.player}
+              accessibilityRole="link"
+              onPress={() => openPlayer(r.id)}
+            >
               <Num style={s.jersey}>{r.number}</Num>
               <View style={{ flex: 1 }}>
                 <Text style={s.pName}>{r.name}</Text>
@@ -201,9 +232,52 @@ function Overview({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
                 {r.points}
                 <Text style={s.pSub}> PKT</Text>
               </Num>
-            </View>
+            </Pressable>
           ) : null,
         )}
+      </View>
+    </>
+  );
+}
+
+function OnCourt({
+  game,
+  box,
+}: {
+  game: ApiGame;
+  box: NonNullable<ApiGameDetail["box"]>;
+}) {
+  const sides: [ApiTeam, ApiPlayerLine[]][] = [
+    [game.home, box.home.filter((p) => p.onCourt)],
+    [game.away, box.away.filter((p) => p.onCourt)],
+  ];
+  if (!sides.some(([, l]) => l.length)) return null;
+  return (
+    <>
+      <SectionHeader title="Auf dem Feld" />
+      <View style={s.court}>
+        {sides.map(([t, lines]) => (
+          <View key={t.code} style={s.courtSide}>
+            <View style={s.courtTeam}>
+              <TeamBadge team={t} size={20} />
+              <Text style={s.courtTeamName}>{t.abbr}</Text>
+            </View>
+            {lines.map((p) => (
+              <Pressable
+                key={p.id || p.name}
+                onPress={() => openPlayer(p.id)}
+                accessibilityRole="link"
+                style={s.courtPlayer}
+              >
+                <Num style={s.courtNo}>{p.number}</Num>
+                <Text numberOfLines={1} style={s.courtName}>
+                  {p.name.split(" ").slice(-1)[0]}
+                </Text>
+                <Num style={s.courtPts}>{p.points}</Num>
+              </Pressable>
+            ))}
+          </View>
+        ))}
       </View>
     </>
   );
@@ -212,9 +286,17 @@ function Overview({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
 function Box({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
   const [side, setSide] = useState<"home" | "away">("home");
   if (!box) return <Empty>Der Boxscore ist noch nicht verfügbar.</Empty>;
-  const rows = box[side];
-  const max = Math.max(...rows.map((r) => r.points));
-  const cols = ["MIN", "PKT", "REB", "AST", "+/-"];
+  const lines = box[side];
+  const live = game.status === "live";
+  const best = (pick: (l: ApiPlayerLine) => number) =>
+    Math.max(...lines.filter((l) => l.minutes).map(pick), 1);
+  const top = {
+    points: best((l) => l.points),
+    rebounds: best((l) => l.rebounds),
+    assists: best((l) => l.assists),
+    pir: best((l) => l.pir),
+  };
+  const columns = [{ label: "MIN", width: 44 }, ...STAT_COLUMNS];
   return (
     <>
       <View style={s.chips}>
@@ -229,40 +311,52 @@ function Box({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
           onPress={() => setSide("away")}
         />
       </View>
-      <View style={s.box}>
-        <View style={s.boxRow}>
-          <Text style={[s.boxName, s.boxHead]}>Spieler</Text>
-          {cols.map((c) => (
-            <Text key={c} style={[s.boxCell, s.boxHead]}>
-              {c}
-            </Text>
-          ))}
-        </View>
-        {rows.map((r) => (
-          <View key={`${r.number}-${r.name}`} style={s.boxRow}>
-            <Text numberOfLines={1} style={[s.boxName, !r.minutes && s.dnp]}>
-              {r.number} {r.name}
-              {r.starter ? <Text style={s.starter}> S</Text> : null}
-            </Text>
-            {r.minutes ? (
-              <>
-                <Num style={s.boxCell}>{r.minutes.split(":")[0]}</Num>
-                <Num style={[s.boxCell, r.points === max && s.hi]}>
-                  {r.points}
-                </Num>
-                <Num style={s.boxCell}>{r.rebounds}</Num>
-                <Num style={s.boxCell}>{r.assists}</Num>
-                <Num style={s.boxCell}>
-                  {r.plusMinus > 0 ? `+${r.plusMinus}` : r.plusMinus}
-                </Num>
-              </>
-            ) : (
-              <Text style={[s.boxCell, s.dnp, { width: 200 }]}>
-                nicht eingesetzt
-              </Text>
-            )}
-          </View>
-        ))}
+      <View style={{ paddingHorizontal: space.lg }}>
+        <StatTable
+          leftLabel="Spieler"
+          columns={columns}
+          rows={[
+            ...lines.map((r) => ({
+              key: `${r.id}-${r.number}-${r.name}`,
+              onPress: r.id ? () => openPlayer(r.id) : undefined,
+              accessibilityLabel: `Spielerseite ${r.name}`,
+              left: (
+                <View style={s.boxLeft}>
+                  <Num style={s.boxNo}>{r.number}</Num>
+                  <Text
+                    numberOfLines={1}
+                    style={[s.boxName, !r.minutes && s.dnp]}
+                  >
+                    {r.name.split(" ").slice(-1)[0]}
+                    {r.starter ? <Text style={s.starter}> S</Text> : null}
+                  </Text>
+                  {live && r.onCourt ? <View style={s.onDot} /> : null}
+                </View>
+              ),
+              cells: [r.minutes, ...statCells(r)],
+              highlight: [
+                r.points === top.points ? 1 : -1,
+                r.rebounds === top.rebounds ? 7 : -1,
+                r.assists === top.assists ? 8 : -1,
+                r.pir === top.pir ? 14 : -1,
+              ],
+              note: r.minutes ? undefined : "nicht eingesetzt",
+            })),
+            {
+              key: "total",
+              style: "total" as const,
+              left: <Text style={[s.boxName, s.boxTotal]}>Team gesamt</Text>,
+              cells: ["", ...statCells(box.totals[side])].map((c, i) =>
+                i === 13 ? "" : c,
+              ),
+            },
+          ]}
+        />
+        <Text style={s.boxHint}>
+          {live ? "● = auf dem Feld · " : ""}S = Starter · Seitlich wischen für
+          alle Werte, Spieler antippen für die Spielerseite.
+        </Text>
+        <StatLegend />
       </View>
     </>
   );
@@ -424,36 +518,83 @@ const s = StyleSheet.create({
     paddingHorizontal: space.lg,
     paddingVertical: space.md,
   },
-  box: {
-    marginHorizontal: space.lg,
-    backgroundColor: colors.panel,
-    borderRadius: radius.md,
-    paddingHorizontal: space.sm,
-  },
-  boxRow: {
+  boxLeft: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 9,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.line,
+    gap: 6,
+    paddingLeft: 10,
+    paddingRight: 4,
+  },
+  boxNo: {
+    width: 22,
+    fontFamily: fonts.bodyBold,
+    fontSize: 12,
+    color: colors.muted,
   },
   boxName: {
-    flex: 1,
-    fontFamily: fonts.body,
+    flexShrink: 1,
+    fontFamily: fonts.bodyMedium,
     fontSize: 13,
     color: colors.text,
-    paddingRight: 6,
   },
-  boxCell: {
-    width: 34,
-    textAlign: "right",
+  boxTotal: { paddingLeft: 10, fontFamily: fonts.bodyBold },
+  boxHint: {
     fontFamily: fonts.body,
-    fontSize: 13,
+    fontSize: 11,
+    color: colors.muted,
+    marginTop: 10,
   },
-  boxHead: { fontFamily: fonts.bodyBold, fontSize: 11, color: colors.muted },
+  onDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: colors.win,
+  },
+  court: {
+    flexDirection: "row",
+    gap: space.sm,
+    paddingHorizontal: space.lg,
+  },
+  courtSide: {
+    flex: 1,
+    backgroundColor: colors.panel,
+    borderRadius: radius.md,
+    padding: 10,
+    gap: 2,
+  },
+  courtTeam: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 4,
+  },
+  courtTeamName: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 12,
+    color: colors.muted,
+  },
+  courtPlayer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 5,
+  },
+  courtNo: {
+    width: 20,
+    fontFamily: fonts.bodyBold,
+    fontSize: 12,
+    color: colors.win,
+  },
+  courtName: {
+    flex: 1,
+    fontFamily: fonts.bodyMedium,
+    fontSize: 13,
+    color: colors.text,
+  },
+  courtPts: { fontFamily: fonts.bodyBold, fontSize: 13 },
   starter: { color: colors.ball, fontFamily: fonts.bodyBold, fontSize: 10 },
   dnp: { color: colors.muted },
-  hi: { color: colors.ball, fontFamily: fonts.bodyBold },
   pbp: { paddingHorizontal: space.lg, paddingTop: space.sm },
   play: {
     flexDirection: "row",

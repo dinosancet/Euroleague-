@@ -36,25 +36,44 @@ export interface ApiGame {
   venue?: string;
 }
 
-export interface ApiPlayerLine {
-  number: string;
-  name: string;
-  starter: boolean;
-  /** "mm:ss", empty when the player did not play. */
-  minutes: string;
+/** Made and attempted shots. */
+export type ApiShots = [made: number, attempted: number];
+
+/**
+ * One set of basketball numbers. Used for a player in a game, a team in a game
+ * and, with decimals, for season averages.
+ */
+export interface ApiStatLine {
   points: number;
+  twos: ApiShots;
+  threes: ApiShots;
+  freeThrows: ApiShots;
+  offRebounds: number;
+  defRebounds: number;
   rebounds: number;
   assists: number;
+  steals: number;
+  turnovers: number;
+  blocks: number;
+  fouls: number;
+  /** Performance Index Rating, the Euroleague's efficiency value. */
+  pir: number;
   plusMinus: number;
 }
 
-export interface ApiTeamTotals {
-  rebounds: number;
-  assists: number;
-  threesMade: number;
-  turnovers: number;
-  steals: number;
+export interface ApiPlayerLine extends ApiStatLine {
+  /** Person code from the data source, used for /v1/players/:id. */
+  id: string;
+  number: string;
+  name: string;
+  starter: boolean;
+  /** On the court right now (only meaningful while the game is live). */
+  onCourt: boolean;
+  /** "mm:ss", empty when the player did not play. */
+  minutes: string;
 }
+
+export type ApiTeamTotals = ApiStatLine;
 
 export interface ApiPlay {
   id: number;
@@ -96,15 +115,64 @@ export interface ApiStandings {
 }
 
 export interface ApiPlayer {
+  id: string;
   number: string;
   name: string;
   position: string;
   heightCm: number | null;
   country: string | null;
+  photo: string | null;
 }
 
 export interface ApiRoster {
   team: ApiTeam;
   coach: string | null;
   players: ApiPlayer[];
+}
+
+export interface ApiPlayerGame {
+  code: number;
+  round: number;
+  startUtc: string;
+  opponent: ApiTeam;
+  atHome: boolean;
+  /** [player's team, opponent] */
+  score: [number, number];
+  won: boolean;
+  started: boolean;
+  /** "mm:ss" */
+  minutes: string;
+  stats: ApiStatLine;
+}
+
+export interface ApiPlayerProfile {
+  id: string;
+  name: string;
+  number: string;
+  position: string;
+  team: ApiTeam | null;
+  photo: string | null;
+  heightCm: number | null;
+  weightKg: number | null;
+  /** "YYYY-MM-DD" */
+  birthDate: string | null;
+  country: string | null;
+  /** Previous club before this season, if known. */
+  lastTeam: string | null;
+  season: {
+    games: number;
+    starts: number;
+    /** Average minutes per game, "mm:ss". */
+    minutes: string;
+    /** Per-game averages, one decimal. */
+    averages: ApiStatLine;
+    /** Shooting percentages over the season, e.g. 47.7. */
+    pct: {
+      twos: number | null;
+      threes: number | null;
+      freeThrows: number | null;
+    };
+  } | null;
+  /** Newest first. */
+  games: ApiPlayerGame[];
 }
