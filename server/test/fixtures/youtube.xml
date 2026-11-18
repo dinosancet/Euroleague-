@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+ <link rel="self" href="http://www.youtube.com/feeds/videos.xml?channel_id=UCGr3nR_XH9r6E5b09ZJAT9w"/>
+ <id>yt:channel:Gr3nR_XH9r6E5b09ZJAT9w</id>
+ <yt:channelId>Gr3nR_XH9r6E5b09ZJAT9w</yt:channelId>
+ <title>EUROLEAGUE BASKETBALL</title>
+ <link rel="alternate" href="https://www.youtube.com/channel/UCGr3nR_XH9r6E5b09ZJAT9w"/>
+ <author>
+  <name>EUROLEAGUE BASKETBALL</name>
+  <uri>https://www.youtube.com/channel/UCGr3nR_XH9r6E5b09ZJAT9w</uri>
+ </author>
+ <published>2009-10-02T09:52:43+00:00</published>
+ <entry>
+  <id>yt:video:aaaaaaaaaa1</id>
+  <yt:videoId>aaaaaaaaaa1</yt:videoId>
+  <yt:channelId>UCGr3nR_XH9r6E5b09ZJAT9w</yt:channelId>
+  <title>Desert Storm | Fenerbahce - Dubai | R4 BASKETBALL HIGHLIGHTS 2026-27</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=aaaaaaaaaa1"/>
+  <author>
+   <name>EUROLEAGUE BASKETBALL</name>
+   <uri>https://www.youtube.com/channel/UCGr3nR_XH9r6E5b09ZJAT9w</uri>
+  </author>
+  <published>2026-10-10T08:00:12+00:00</published>
+  <updated>2026-10-10T09:11:04+00:00</updated>
+  <media:group>
+   <media:title>Desert Storm | Fenerbahce - Dubai | R4 BASKETBALL HIGHLIGHTS 2026-27</media:title>
+   <media:content url="https://www.youtube.com/v/aaaaaaaaaa1?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i2.ytimg.com/vi/aaaaaaaaaa1/hqdefault.jpg" width="480" height="360"/>
+   <media:description>Fenerbahce Beko Istanbul vs Dubai Basketball</media:description>
+   <media:community>
+    <media:starRating count="812" average="5.00" min="1" max="5"/>
+    <media:statistics views="48211"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:bbbbbbbbbb2</id>
+  <yt:videoId>bbbbbbbbbb2</yt:videoId>
+  <yt:channelId>UCGr3nR_XH9r6E5b09ZJAT9w</yt:channelId>
+  <title>TOP 10 Plays | SALVATION LATE AND THUNDER AT THE FINISH | ROUND 4 | EuroLeague Basketball 2026-27</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=bbbbbbbbbb2"/>
+  <author><name>EUROLEAGUE BASKETBALL</name></author>
+  <published>2026-10-10T12:30:00+00:00</published>
+  <updated>2026-10-10T12:31:00+00:00</updated>
+  <media:group>
+   <media:title>TOP 10 Plays</media:title>
+   <media:thumbnail url="https://i3.ytimg.com/vi/bbbbbbbbbb2/hqdefault.jpg" width="480" height="360"/>
+   <media:community><media:statistics views="120004"/></media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:cccccccccc3</id>
+  <yt:videoId>cccccccccc3</yt:videoId>
+  <title>Wade Baldwin with the HAMMER 🔨 #euroleague</title>
+  <link rel="alternate" href="https://www.youtube.com/shorts/cccccccccc3"/>
+  <published>2026-10-11T18:00:00+00:00</published>
+  <media:group>
+   <media:thumbnail url="https://i1.ytimg.com/vi/cccccccccc3/hqdefault.jpg" width="480" height="360"/>
+   <media:community><media:statistics views="9000"/></media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:dddddddddd4</id>
+  <yt:videoId>dddddddddd4</yt:videoId>
+  <title>Ten-Point Lead Almost GONE | Milan - Bayern Munich | R3 BASKETBALL HIGHLIGHTS 2026-27</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=dddddddddd4"/>
+  <published>2026-10-04T07:45:00+00:00</published>
+  <media:group>
+   <media:thumbnail url="https://i4.ytimg.com/vi/dddddddddd4/hqdefault.jpg" width="480" height="360"/>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:eeeeeeeeee5</id>
+  <yt:videoId>eeeeeeeeee5</yt:videoId>
+  <title>Real Madrid &amp; Sergio Scariolo talk after the win | Press Conference</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=eeeeeeeeee5"/>
+  <published>2026-10-09T23:10:00+00:00</published>
+ </entry>
+ <entry>
+  <id>yt:video:broken</id>
+  <yt:videoId></yt:videoId>
+  <title>No id</title>
+  <published>2026-10-09T23:10:00+00:00</published>
+ </entry>
+</feed>

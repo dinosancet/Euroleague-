@@ -12,6 +12,7 @@
  *   /v1/teams/:code        roster of one club
  *   /v1/players/:code      player info, season averages and game log
  *   /v1/news               headlines from public RSS feeds (see news.ts)
+ *   /v1/videos             clips from the official YouTube channel (videos.ts)
  */
 import type {
   ApiGame,
@@ -20,6 +21,7 @@ import type {
   ApiPlayerProfile,
   ApiRoster,
   ApiStandings,
+  ApiVideo,
 } from "../../shared/api";
 import {
   applyLiveHeader,
@@ -45,6 +47,7 @@ import {
   type ElStandingRow,
 } from "./normalize";
 import { mergeNews, parseRss, SOURCES, toNews } from "./news";
+import { mergeVideos, parseFeed, toVideos, VIDEO_SOURCES } from "./videos";
 
 export interface Env {
   /** Season code, e.g. "E2026". */
@@ -66,6 +69,9 @@ const TTL = {
   player: 600,
   teamSeason: 3600,
   news: 900,
+  videos: 900,
+  /** How long older videos are remembered after they leave the feed. */
+  videoArchive: 30 * 86400,
 };
 
 /* ---------- caching ---------- */
@@ -300,6 +306,66 @@ async function news(): Promise<ApiNewsItem[]> {
   });
 }
 
+/**
+ * The channel feed only lists its 15 newest uploads, which on a busy match
+ * day are soon all Shorts. So every refresh is merged into an archive kept in
+ * the edge cache, and the app gets the last few weeks of videos. The archive
+ * is best effort: if the cache drops it, the list simply starts again from
+ * the feed.
+ */
+async function videos(env: Env): Promise<ApiVideo[]> {
+  return cached("videos:v1", TTL.videos, async () => {
+    const schedule = await games(env).catch(() => [] as ApiGame[]);
+    const lists = await Promise.all(
+      VIDEO_SOURCES.map(async (src) => {
+        try {
+          const res = await fetch(src.url, {
+            headers: {
+              accept: "application/atom+xml, application/xml, text/xml",
+              "user-agent": "HooplineVideoReader/1.0 (feed reader)",
+            },
+          });
+          if (!res.ok) return null;
+          return toVideos(src, parseFeed(await res.text()), schedule);
+        } catch {
+          return null;
+        }
+      }),
+    );
+    const fresh = lists.filter((l): l is ApiVideo[] => !!l?.length);
+
+    const cache =
+      typeof caches !== "undefined"
+        ? (caches as unknown as { default: Cache }).default
+        : null;
+    const key = new Request("https://cache.hoopline/videos:archive:v1");
+    const old: ApiVideo[] = cache
+      ? await cache
+          .match(key)
+          .then((r) => (r ? (r.json() as Promise<ApiVideo[]>) : []))
+          .catch(() => [])
+      : [];
+    if (!fresh.length && !old.length)
+      throw new Upstream("no video source reachable");
+
+    const cutoff = Date.now() - TTL.videoArchive * 1000;
+    const all = mergeVideos([...fresh, old]).filter(
+      (v) => Date.parse(v.publishedUtc) >= cutoff,
+    );
+    if (cache && fresh.length) {
+      await cache
+        .put(
+          key,
+          new Response(JSON.stringify(all), {
+            headers: { "cache-control": `max-age=${TTL.videoArchive}` },
+          }),
+        )
+        .catch(() => {});
+    }
+    return all;
+  });
+}
+
 /* ---------- routing ---------- */
 
 const CORS = {
@@ -334,6 +400,7 @@ export async function handle(req: Request, env: Env): Promise<Response> {
         : json({ error: "Spiel nicht gefunden." }, 404);
     }
     if (path === "/v1/news") return json(await news(), 200, 300);
+    if (path === "/v1/videos") return json(await videos(env), 200, 300);
     if (path === "/v1/standings") return json(await standings(env), 200, 60);
     m = path.match(/^\/v1\/teams\/([A-Z0-9]{2,4})$/);
     if (m) {
@@ -359,7 +426,9 @@ export async function handle(req: Request, env: Env): Promise<Response> {
         error: upstream
           ? path === "/v1/news"
             ? "Die Nachrichtenquellen sind gerade nicht erreichbar."
-            : "Die Euroleague-Daten sind gerade nicht erreichbar."
+            : path === "/v1/videos"
+              ? "Die Videos sind gerade nicht erreichbar."
+              : "Die Euroleague-Daten sind gerade nicht erreichbar."
           : "Interner Fehler.",
       },
       upstream ? 502 : 500,
