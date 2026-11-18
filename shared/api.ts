@@ -237,3 +237,22 @@ export interface ApiNewsItem {
   /** Club codes as used by the data feed, e.g. ["MUN", "ZAL"]. */
   teams: string[];
 }
+
+/** Body of POST /v1/push/register: which pushes one phone wants. */
+export interface ApiPushRegistration {
+  /** Expo push token, "ExponentPushToken[...]". */
+  token: string;
+  /** Club codes of the favourite teams, e.g. ["MUN", "PAN"]. */
+  teams: string[];
+  /** Push shortly before tip-off. */
+  tipOff: boolean;
+  /** Push with the final score. */
+  finalScore: boolean;
+  /** Phone's time zone, e.g. "Europe/Berlin", for times in the message. */
+  timeZone: string;
+}
+
+/** Data attached to every Hoopline push, read by the app when it is tapped. */
+export interface ApiPushData {
+  gameCode?: number;
+}
