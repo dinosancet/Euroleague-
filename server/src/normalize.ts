@@ -12,6 +12,7 @@ import type {
   ApiPlayerLine,
   ApiPlayerProfile,
   ApiStanding,
+  ApiTeamSeason,
   ApiStatLine,
   ApiTeam,
   ApiTeamTotals,
@@ -192,7 +193,7 @@ export function formatName(raw: string | null | undefined): string {
     s
       .toLowerCase()
       .replace(
-        /(^|[\s'-])(\p{L})/gu,
+        /(^|[\s'.-])(\p{L})/gu,
         (_, sep: string, ch: string) => sep + ch.toUpperCase(),
       );
   return first ? `${title(first)} ${title(last)}` : title(last);
@@ -547,5 +548,68 @@ export function toProfile(
           }
         : null,
     games,
+  };
+}
+
+/* ---------- team season (preview of an upcoming game) ---------- */
+
+/** v2 /clubs/{code}/people/stats: every player's season plus the team's. */
+export interface ElClubStats {
+  playerStats: {
+    player: { code: string; name: string };
+    averagePerGame: ElPersonStatLine | null;
+  }[];
+  averagePerGame: ElPersonStatLine | null;
+}
+
+const one = (v: number) => Math.round(v * 10) / 10;
+
+export function toTeamSeason(s: ElClubStats): ApiTeamSeason | null {
+  const avg = s.averagePerGame;
+  const games = avg?.gamesPlayed ?? 0;
+  if (!avg || games < 1) return null;
+  // Someone with 2 games and 20 points should not count as the top scorer.
+  const regulars = (s.playerStats ?? []).filter(
+    (p) => p.averagePerGame && (p.averagePerGame.gamesPlayed ?? 0) >= games / 2,
+  );
+  const leader = (
+    pick: (l: ElPersonStatLine) => number,
+  ): ApiTeamSeason["leaders"]["points"] => {
+    let best: (typeof regulars)[number] | null = null;
+    for (const p of regulars)
+      if (!best || pick(p.averagePerGame!) > pick(best.averagePerGame!))
+        best = p;
+    if (!best) return null;
+    return {
+      id: personCode(best.player.code),
+      name: formatName(best.player.name),
+      value: one(pick(best.averagePerGame!)),
+    };
+  };
+  const line = personStats(avg);
+  return {
+    games,
+    averages: {
+      ...line,
+      points: one(line.points),
+      rebounds: one(line.rebounds),
+      assists: one(line.assists),
+      steals: one(line.steals),
+      turnovers: one(line.turnovers),
+      blocks: one(line.blocks),
+      pir: one(line.pir),
+      plusMinus: one(line.plusMinus),
+    },
+    pct: {
+      twos: pct(avg.twoPointShootingPercentage),
+      threes: pct(avg.threePointShootingPercentage),
+      freeThrows: pct(avg.freeThrowShootingPercentage),
+    },
+    leaders: {
+      points: leader((l) => l.points),
+      rebounds: leader((l) => l.totalRebounds),
+      assists: leader((l) => l.assistances),
+      pir: leader((l) => l.valuation),
+    },
   };
 }

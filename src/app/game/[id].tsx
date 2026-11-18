@@ -1,12 +1,15 @@
 import type {
   ApiGame,
   ApiGameDetail,
+  ApiLeader,
   ApiPlayerLine,
+  ApiShots,
   ApiStanding,
   ApiTeam,
+  ApiTeamSeason,
 } from "@shared/api";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Pressable,
   RefreshControl,
@@ -27,6 +30,7 @@ import {
 import {
   Chip,
   CompareRow,
+  decimal,
   Empty,
   LivePill,
   Num,
@@ -34,7 +38,7 @@ import {
   Segmented,
   TeamBadge,
 } from "@/components/ui";
-import { useGameDetail, useStandings } from "@/data/api";
+import { useGameDetail, useGames, useStandings } from "@/data/api";
 import { formatDay, formatTime } from "@/lib/format";
 import { colors, fonts, radius, space } from "@/theme";
 
@@ -65,7 +69,7 @@ export default function GameScreen() {
       >
         <Header game={game} />
         {game.status === "scheduled" ? (
-          <Preview game={game} />
+          <Preview game={game} preview={data.preview ?? null} />
         ) : (
           <>
             <Segmented<Tab>
@@ -163,81 +167,140 @@ const openPlayer = (id: string) => {
   if (id) router.push({ pathname: "/player/[id]", params: { id } });
 };
 
-const topScorer = (lines: ApiPlayerLine[]) =>
-  lines.reduce<ApiPlayerLine | null>(
-    (m, r) => (!m || r.points > m.points ? r : m),
+/** Shooting percentage, one decimal; 0 when nothing was attempted. */
+const rate = ([made, att]: ApiShots) =>
+  att ? Math.round((made / att) * 1000) / 10 : 0;
+
+type Category = "points" | "rebounds" | "assists";
+const CATEGORIES: [Category, string][] = [
+  ["points", "Punkte"],
+  ["rebounds", "Rebounds"],
+  ["assists", "Assists"],
+];
+
+const gameLeader = (
+  lines: ApiPlayerLine[],
+  key: Category,
+): ApiLeader | null => {
+  const best = lines.reduce<ApiPlayerLine | null>(
+    (m, r) => (r.minutes && (!m || r[key] > m[key]) ? r : m),
     null,
   );
+  return best && best[key] > 0
+    ? { id: best.id, name: best.name, value: best[key] }
+    : null;
+};
 
 function Overview({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
   if (!box)
     return <Empty>Für dieses Spiel gibt es noch keine Statistiken.</Empty>;
   const { home, away } = box.totals;
-  const tops: [ApiPlayerLine | null, ApiTeam][] = [
-    [topScorer(box.home), game.home],
-    [topScorer(box.away), game.away],
-  ];
   return (
     <>
       {game.status === "live" && <OnCourt game={game} box={box} />}
+      <SectionHeader
+        title={game.status === "live" ? "Topwerte" : "Topwerte des Spiels"}
+      />
+      <Leaders
+        game={game}
+        rows={CATEGORIES.map(([key, label]) => [
+          label,
+          gameLeader(box.home, key),
+          gameLeader(box.away, key),
+        ])}
+      />
       <SectionHeader title="Teamvergleich" />
       <View style={s.cmp}>
+        <CompareRow
+          label={`Zweier ${home.twos.join("/")} · ${away.twos.join("/")}`}
+          home={rate(home.twos)}
+          away={rate(away.twos)}
+          suffix=" %"
+        />
+        <CompareRow
+          label={`Dreier ${home.threes.join("/")} · ${away.threes.join("/")}`}
+          home={rate(home.threes)}
+          away={rate(away.threes)}
+          suffix=" %"
+        />
+        <CompareRow
+          label={`Freiwürfe ${home.freeThrows.join("/")} · ${away.freeThrows.join("/")}`}
+          home={rate(home.freeThrows)}
+          away={rate(away.freeThrows)}
+          suffix=" %"
+        />
         <CompareRow
           label="Rebounds"
           home={home.rebounds}
           away={away.rebounds}
         />
+        <CompareRow
+          label="Offensiv-Rebounds"
+          home={home.offRebounds}
+          away={away.offRebounds}
+        />
         <CompareRow label="Assists" home={home.assists} away={away.assists} />
-        <CompareRow
-          label="Zweier getroffen"
-          home={home.twos[0]}
-          away={away.twos[0]}
-        />
-        <CompareRow
-          label="Dreier getroffen"
-          home={home.threes[0]}
-          away={away.threes[0]}
-        />
-        <CompareRow
-          label="Freiwürfe getroffen"
-          home={home.freeThrows[0]}
-          away={away.freeThrows[0]}
-        />
-        <CompareRow label="Blocks" home={home.blocks} away={away.blocks} />
         <CompareRow label="Steals" home={home.steals} away={away.steals} />
+        <CompareRow label="Blocks" home={home.blocks} away={away.blocks} />
         <CompareRow
           label="Ballverluste"
           home={home.turnovers}
           away={away.turnovers}
           lowerIsBetter
         />
-      </View>
-      <SectionHeader title="Beste Werfer" />
-      <View style={s.list}>
-        {tops.map(([r, t]) =>
-          r ? (
-            <Pressable
-              key={t.code}
-              style={s.player}
-              accessibilityRole="link"
-              onPress={() => openPlayer(r.id)}
-            >
-              <Num style={s.jersey}>{r.number}</Num>
-              <View style={{ flex: 1 }}>
-                <Text style={s.pName}>{r.name}</Text>
-                <Text style={s.pSub}>
-                  {t.shortName} · {r.rebounds} Reb · {r.assists} Ast
-                </Text>
-              </View>
-              <Num style={s.pPts}>
-                {r.points}
-                <Text style={s.pSub}> PKT</Text>
-              </Num>
-            </Pressable>
-          ) : null,
-        )}
+        <CompareRow
+          label="Fouls"
+          home={home.fouls}
+          away={away.fouls}
+          lowerIsBetter
+        />
       </View>
     </>
+  );
+}
+
+/** Best player of each team per category, home left and away right. */
+function Leaders({
+  game,
+  rows,
+  unit,
+}: {
+  game: ApiGame;
+  rows: [string, ApiLeader | null, ApiLeader | null][];
+  /** Shown under the number, e.g. "pro Spiel". */
+  unit?: string;
+}) {
+  const cell = (l: ApiLeader | null, align: "left" | "right") => (
+    <Pressable
+      style={[s.leader, align === "right" && s.leaderRight]}
+      disabled={!l?.id}
+      accessibilityRole="link"
+      accessibilityLabel={l ? `Spielerseite ${l.name}` : undefined}
+      onPress={() => l && openPlayer(l.id)}
+    >
+      <Num style={[s.leaderVal, { textAlign: align }]}>
+        {l ? decimal(l.value) : "–"}
+      </Num>
+      <Text numberOfLines={1} style={[s.leaderName, { textAlign: align }]}>
+        {l ? shortName(l.name) : ""}
+      </Text>
+    </Pressable>
+  );
+  return (
+    <View style={s.leaders}>
+      <View style={s.leaderHead}>
+        <TeamBadge team={game.home} size={22} />
+        <Text style={s.leaderUnit}>{unit ?? ""}</Text>
+        <TeamBadge team={game.away} size={22} />
+      </View>
+      {rows.map(([label, h, a]) => (
+        <View key={label} style={s.leaderRow}>
+          {cell(h, "left")}
+          <Text style={s.leaderLabel}>{label}</Text>
+          {cell(a, "right")}
+        </View>
+      ))}
+    </View>
   );
 }
 
@@ -363,6 +426,9 @@ function Box({ game, box }: { game: ApiGame; box: ApiGameDetail["box"] }) {
   );
 }
 
+const periodLabel = (p: number) =>
+  p > 4 ? `OT${p > 5 ? p - 4 : ""}` : `Q${p}`;
+
 function Plays({
   game,
   plays,
@@ -370,64 +436,186 @@ function Plays({
   game: ApiGame;
   plays: ApiGameDetail["plays"];
 }) {
+  const periods = useMemo(
+    () => [...new Set(plays.map((p) => p.period))].sort((a, b) => a - b),
+    [plays],
+  );
+  // null = all quarters; scoring = only plays that changed the score.
+  const [period, setPeriod] = useState<number | null>(null);
+  const [scoring, setScoring] = useState(false);
   if (!plays.length) return <Empty>Noch keine Spielzüge.</Empty>;
+  const shown = plays.filter(
+    (p) => (period === null || p.period === period) && (!scoring || p.score),
+  );
   return (
-    <View style={s.pbp}>
-      {plays.slice(0, 80).map((p) => (
-        <View key={p.id} style={s.play}>
-          <Num style={s.playTime}>
-            {p.period > 4 ? "OT" : `Q${p.period}`}
-            {"\n"}
-            {p.clock}
-          </Num>
-          <View style={s.playMid}>
-            {p.side ? (
-              <TeamBadge team={p.side === "home" ? game.home : game.away} />
-            ) : (
-              <View style={{ width: 28 }} />
-            )}
-            <View style={{ flex: 1 }}>
-              <Text style={[s.playText, p.score && s.playScored]}>
-                {p.text}
-              </Text>
-              {p.player ? <Text style={s.pSub}>{p.player}</Text> : null}
-            </View>
-          </View>
-          {p.score ? (
-            <Num style={s.playScore}>
-              {p.score[0]}–{p.score[1]}
+    <>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={s.chips}
+      >
+        <Chip
+          label="Alle"
+          active={period === null}
+          onPress={() => setPeriod(null)}
+        />
+        {periods.map((p) => (
+          <Chip
+            key={p}
+            label={periodLabel(p)}
+            active={period === p}
+            onPress={() => setPeriod(p)}
+          />
+        ))}
+        <View style={s.chipGap} />
+        <Chip
+          label="Nur Punkte"
+          active={scoring}
+          onPress={() => setScoring((v) => !v)}
+        />
+      </ScrollView>
+      <View style={s.pbp}>
+        {shown.length === 0 && <Empty>Keine passenden Spielzüge.</Empty>}
+        {shown.slice(0, period === null ? 120 : 400).map((p) => (
+          <View key={p.id} style={s.play}>
+            <Num style={s.playTime}>
+              {periodLabel(p.period)}
+              {"\n"}
+              {p.clock}
             </Num>
-          ) : null}
-        </View>
-      ))}
+            <View style={s.playMid}>
+              {p.side ? (
+                <TeamBadge team={p.side === "home" ? game.home : game.away} />
+              ) : (
+                <View style={{ width: 28 }} />
+              )}
+              <View style={{ flex: 1 }}>
+                <Text style={[s.playText, p.score && s.playScored]}>
+                  {p.text}
+                </Text>
+                {p.player ? <Text style={s.pSub}>{p.player}</Text> : null}
+              </View>
+            </View>
+            {p.score ? (
+              <Num style={s.playScore}>
+                {p.score[0]}–{p.score[1]}
+              </Num>
+            ) : null}
+          </View>
+        ))}
+      </View>
+    </>
+  );
+}
+
+/** Last finished games of a team before `before`, newest first. */
+const lastGames = (all: ApiGame[], code: string, before: string, n: number) =>
+  all
+    .filter(
+      (g) =>
+        g.status === "final" &&
+        g.startUtc < before &&
+        (g.home.code === code || g.away.code === code),
+    )
+    .slice(-n)
+    .reverse();
+
+const wonBy = (g: ApiGame, code: string) =>
+  g.home.code === code ? g.score[0] > g.score[1] : g.score[1] > g.score[0];
+
+function Form({ games, team }: { games: ApiGame[]; team: ApiTeam }) {
+  return (
+    <View style={s.formRow}>
+      <TeamBadge team={team} size={22} />
+      <Text numberOfLines={1} style={s.formTeam}>
+        {team.shortName}
+      </Text>
+      <View style={s.formChips}>
+        {games.length === 0 && <Text style={s.pSub}>noch keine Spiele</Text>}
+        {[...games].reverse().map((g) => {
+          const won = wonBy(g, team.code);
+          const home = g.home.code === team.code;
+          const opp = home ? g.away : g.home;
+          return (
+            <Pressable
+              key={g.code}
+              accessibilityRole="link"
+              accessibilityLabel={`${won ? "Sieg" : "Niederlage"} gegen ${opp.shortName}`}
+              onPress={() =>
+                router.push({
+                  pathname: "/game/[id]",
+                  params: { id: String(g.code) },
+                })
+              }
+              style={[s.formChip, won ? s.formWin : s.formLoss]}
+            >
+              <Text style={[s.formLetter, !won && s.formLetterLoss]}>
+                {won ? "S" : "N"}
+              </Text>
+              <Text style={s.formOpp}>{opp.abbr}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 }
 
-function Preview({ game }: { game: ApiGame }) {
+function Preview({
+  game,
+  preview,
+}: {
+  game: ApiGame;
+  preview: ApiGameDetail["preview"];
+}) {
   const { data } = useStandings();
+  const games = useGames().data ?? [];
   const row = (code: string): ApiStanding | undefined =>
     data?.rows.find((r) => r.team.code === code);
   const h = row(game.home.code);
   const a = row(game.away.code);
-  const perGame = (r: ApiStanding, v: number) =>
-    +(v / Math.max(1, r.wins + r.losses)).toFixed(1);
+  const hs: ApiTeamSeason | null = preview?.home ?? null;
+  const as: ApiTeamSeason | null = preview?.away ?? null;
+  const meetings = games
+    .filter(
+      (g) =>
+        g.code !== game.code &&
+        g.status === "final" &&
+        ((g.home.code === game.home.code && g.away.code === game.away.code) ||
+          (g.home.code === game.away.code && g.away.code === game.home.code)),
+    )
+    .reverse();
+  const formHome = lastGames(games, game.home.code, game.startUtc, 5);
+  const formAway = lastGames(games, game.away.code, game.startUtc, 5);
+  const leaderRows: [string, ApiLeader | null, ApiLeader | null][] =
+    hs && as
+      ? [
+          ["Punkte", hs.leaders.points, as.leaders.points],
+          ["Rebounds", hs.leaders.rebounds, as.leaders.rebounds],
+          ["Assists", hs.leaders.assists, as.leaders.assists],
+          ["Effizienz (PIR)", hs.leaders.pir, as.leaders.pir],
+        ]
+      : [];
+
   return (
     <>
+      {games.length > 0 && (
+        <>
+          <SectionHeader title="Form" right="letzte 5 Spiele" />
+          <View style={s.form}>
+            <Form games={formHome} team={game.home} />
+            <Form games={formAway} team={game.away} />
+          </View>
+        </>
+      )}
+
       <SectionHeader title="Saisonbilanz" />
       {h && a ? (
         <View style={s.cmp}>
-          <CompareRow label="Siege" home={h.wins} away={a.wins} />
           <CompareRow
-            label="Punkte pro Spiel"
-            home={perGame(h, h.pointsFor)}
-            away={perGame(a, a.pointsFor)}
-          />
-          <CompareRow
-            label="Gegnerpunkte pro Spiel"
-            home={perGame(h, h.pointsAgainst)}
-            away={perGame(a, a.pointsAgainst)}
-            lowerIsBetter
+            label={`Bilanz ${h.wins}–${h.losses} · ${a.wins}–${a.losses}`}
+            home={h.wins}
+            away={a.wins}
           />
           <CompareRow
             label="Tabellenplatz"
@@ -435,10 +623,91 @@ function Preview({ game }: { game: ApiGame }) {
             away={a.position}
             lowerIsBetter
           />
+          {hs && as ? (
+            <>
+              <CompareRow
+                label="Punkte pro Spiel"
+                home={hs.averages.points}
+                away={as.averages.points}
+              />
+              <CompareRow
+                label="Gegnerpunkte pro Spiel"
+                home={
+                  +(h.pointsAgainst / Math.max(1, h.wins + h.losses)).toFixed(1)
+                }
+                away={
+                  +(a.pointsAgainst / Math.max(1, a.wins + a.losses)).toFixed(1)
+                }
+                lowerIsBetter
+              />
+              <CompareRow
+                label="Dreierquote"
+                home={hs.pct.threes ?? 0}
+                away={as.pct.threes ?? 0}
+                suffix=" %"
+              />
+              <CompareRow
+                label="Rebounds pro Spiel"
+                home={hs.averages.rebounds}
+                away={as.averages.rebounds}
+              />
+              <CompareRow
+                label="Assists pro Spiel"
+                home={hs.averages.assists}
+                away={as.averages.assists}
+              />
+              <CompareRow
+                label="Ballverluste pro Spiel"
+                home={hs.averages.turnovers}
+                away={as.averages.turnovers}
+                lowerIsBetter
+              />
+            </>
+          ) : null}
         </View>
       ) : (
         <Empty>Die Bilanz wird geladen.</Empty>
       )}
+
+      {leaderRows.length > 0 && (
+        <>
+          <SectionHeader title="Beste Spieler" right="pro Spiel" />
+          <Leaders game={game} rows={leaderRows} />
+        </>
+      )}
+
+      {meetings.length > 0 && (
+        <>
+          <SectionHeader title="Direkte Duelle" right="diese Saison" />
+          <View style={s.list}>
+            {meetings.map((g) => (
+              <Pressable
+                key={g.code}
+                accessibilityRole="link"
+                onPress={() =>
+                  router.push({
+                    pathname: "/game/[id]",
+                    params: { id: String(g.code) },
+                  })
+                }
+                style={s.meeting}
+              >
+                <Text style={s.pSub}>
+                  {formatDay(g.startUtc)} · Runde {g.round}
+                </Text>
+                <View style={s.meetingRow}>
+                  <TeamBadge team={g.home} size={22} />
+                  <Num style={s.meetingScore}>
+                    {g.score[0]}–{g.score[1]}
+                  </Num>
+                  <TeamBadge team={g.away} size={22} />
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        </>
+      )}
+
       <Text style={s.note}>
         Live-Spielstand, Boxscore und Play-by-Play erscheinen hier, sobald das
         Spiel beginnt.
@@ -519,6 +788,71 @@ const s = StyleSheet.create({
     paddingHorizontal: space.lg,
     paddingVertical: space.md,
   },
+  chipGap: { width: space.sm },
+  leaders: {
+    marginHorizontal: space.lg,
+    backgroundColor: colors.panel,
+    borderRadius: radius.md,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  leaderHead: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: 6,
+  },
+  leaderUnit: { fontFamily: fonts.body, fontSize: 11, color: colors.muted },
+  leaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.line,
+  },
+  leader: { flex: 1, minWidth: 0 },
+  leaderRight: { alignItems: "flex-end" },
+  leaderVal: { fontFamily: fonts.display, fontSize: 22, lineHeight: 24 },
+  leaderName: {
+    fontFamily: fonts.bodyMedium,
+    fontSize: 12,
+    color: colors.text,
+  },
+  leaderLabel: {
+    width: 92,
+    textAlign: "center",
+    fontFamily: fonts.body,
+    fontSize: 11,
+    color: colors.muted,
+  },
+  form: { paddingHorizontal: space.lg, gap: 10 },
+  formRow: { flexDirection: "row", alignItems: "center", gap: 8 },
+  formTeam: {
+    flex: 1,
+    fontFamily: fonts.bodyMedium,
+    fontSize: 13,
+    color: colors.text,
+  },
+  formChips: { flexDirection: "row", gap: 5 },
+  formChip: {
+    width: 34,
+    paddingVertical: 4,
+    borderRadius: radius.sm,
+    alignItems: "center",
+  },
+  formWin: { backgroundColor: "rgba(61,220,151,0.16)" },
+  formLoss: { backgroundColor: colors.liveSoft },
+  formLetter: { fontFamily: fonts.bodyBold, fontSize: 12, color: colors.win },
+  formLetterLoss: { color: colors.live },
+  formOpp: { fontFamily: fonts.body, fontSize: 9, color: colors.muted },
+  meeting: {
+    paddingVertical: 10,
+    gap: 6,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.line,
+  },
+  meetingRow: { flexDirection: "row", alignItems: "center", gap: space.md },
+  meetingScore: { fontFamily: fonts.display, fontSize: 20 },
   boxLeft: {
     flex: 1,
     flexDirection: "row",

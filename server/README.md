@@ -6,14 +6,14 @@ Kleiner Server zwischen App und Euroleague-Daten. Er holt Spielplan, Live-Spiels
 
 ## Endpunkte
 
-| Pfad                    | Inhalt                                                 | Zwischenspeicher              |
-| ----------------------- | ------------------------------------------------------ | ----------------------------- |
-| `GET /v1/games`         | Alle Spiele der Saison, laufende Spiele mit Live-Stand | 60 s, Live-Stand 15 s         |
-| `GET /v1/games/:code`   | Ein Spiel mit Boxscore und Play-by-Play                | 15 s live, 6 h nach Spielende |
-| `GET /v1/standings`     | Tabelle nach dem letzten gespielten Spieltag           | 5 min                         |
-| `GET /v1/teams/:code`   | Kader eines Clubs, z. B. `MUN`                         | 12 h                          |
-| `GET /v1/players/:code` | Spielerprofil, Saisonschnitt und Spiele                | 10 min                        |
-| `GET /v1/news`          | Schlagzeilen und Transfers aus RSS-Feeds               | 15 min                        |
+| Pfad                    | Inhalt                                                                                                                   | Zwischenspeicher                            |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------- |
+| `GET /v1/games`         | Alle Spiele der Saison, laufende Spiele mit Live-Stand                                                                   | 60 s, Live-Stand 15 s                       |
+| `GET /v1/games/:code`   | Ein Spiel mit Boxscore und Play-by-Play; vor Spielbeginn eine Vorschau mit Saisonwerten und besten Spielern beider Teams | 15 s live, 6 h nach Spielende, Vorschau 1 h |
+| `GET /v1/standings`     | Tabelle nach dem letzten gespielten Spieltag                                                                             | 5 min                                       |
+| `GET /v1/teams/:code`   | Kader eines Clubs, z. B. `MUN`                                                                                           | 12 h                                        |
+| `GET /v1/players/:code` | Spielerprofil, Saisonschnitt und Spiele                                                                                  | 10 min                                      |
+| `GET /v1/news`          | Schlagzeilen und Transfers aus RSS-Feeds                                                                                 | 15 min                                      |
 
 ## News
 

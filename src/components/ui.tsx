@@ -191,26 +191,38 @@ export function Segmented<K extends string>({
   );
 }
 
+/** 16.2 -> "16,2" (German decimal comma). */
+export const decimal = (v: number) => String(v).replace(".", ",");
+
 /** Head-to-head bar; the better side is highlighted in orange. */
 export function CompareRow({
   label,
   home,
   away,
   lowerIsBetter,
+  suffix = "",
 }: {
   label: string;
   home: number;
   away: number;
   lowerIsBetter?: boolean;
+  /** Shown after both numbers, e.g. "%". */
+  suffix?: string;
 }) {
   const total = home + away || 1;
   const homeBetter = lowerIsBetter ? home < away : home > away;
   return (
     <View style={{ gap: 5 }}>
       <View style={styles.cmpLbl}>
-        <Num style={styles.cmpVal}>{home}</Num>
+        <Num style={styles.cmpVal}>
+          {decimal(home)}
+          {suffix}
+        </Num>
         <Text style={styles.cmpLabel}>{label}</Text>
-        <Num style={styles.cmpVal}>{away}</Num>
+        <Num style={styles.cmpVal}>
+          {decimal(away)}
+          {suffix}
+        </Num>
       </View>
       <View style={styles.bars}>
         <View

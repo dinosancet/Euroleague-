@@ -6,7 +6,8 @@
  *
  * Routes (all GET, JSON):
  *   /v1/games              season schedule with live scores
- *   /v1/games/:code        one game with box score and play-by-play
+ *   /v1/games/:code        one game with box score and play-by-play, or a
+ *                          preview with both teams' season before tip-off
  *   /v1/standings          table after the latest played round
  *   /v1/teams/:code        roster of one club
  *   /v1/players/:code      player info, season averages and game log
@@ -30,10 +31,12 @@ import {
   toProfile,
   toRoster,
   toStandings,
+  toTeamSeason,
   withPositions,
   toTeam,
   type ElBoxscore,
   type ElClub,
+  type ElClubStats,
   type ElGame,
   type ElLiveHeader,
   type ElPerson,
@@ -61,6 +64,7 @@ const TTL = {
   standings: 300,
   roster: 12 * 3600,
   player: 600,
+  teamSeason: 3600,
   news: 900,
 };
 
@@ -172,7 +176,14 @@ async function gameDetail(
 ): Promise<ApiGameDetail | null> {
   const game = (await games(env)).find((g) => g.code === code);
   if (!game) return null;
-  if (game.status === "scheduled") return { game, box: null, plays: [] };
+  if (game.status === "scheduled") {
+    const [home, away] = await Promise.all(
+      [game.home.code, game.away.code].map((c) =>
+        teamSeason(env, c).catch(() => null),
+      ),
+    );
+    return { game, box: null, plays: [], preview: { home, away } };
+  }
   const ttl = game.status === "live" ? TTL.live : TTL.final;
   const [box, plays] = await Promise.all([
     cached(`box:${env.SEASON}:${code}:${game.status}`, ttl, async () =>
@@ -208,6 +219,17 @@ async function addPositions(
   for (const r of rosters)
     for (const p of r?.players ?? []) positions.set(p.id, p.position);
   return withPositions(box, positions);
+}
+
+/** Team averages and best players of one club this season. */
+async function teamSeason(env: Env, code: string) {
+  return cached(`teamseason:${env.SEASON}:${code}`, TTL.teamSeason, async () =>
+    toTeamSeason(
+      await getJson<ElClubStats>(
+        `${API}/v2/${seasonPath(env)}/clubs/${code}/people/stats`,
+      ),
+    ),
+  );
 }
 
 async function standings(env: Env): Promise<ApiStandings> {

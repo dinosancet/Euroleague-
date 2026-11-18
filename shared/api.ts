@@ -89,6 +89,33 @@ export interface ApiPlay {
   score?: [number, number];
 }
 
+/** One player's season average in one category, e.g. 16.2 points per game. */
+export interface ApiLeader {
+  id: string;
+  name: string;
+  value: number;
+}
+
+/** A team's season so far, used in the preview of an upcoming game. */
+export interface ApiTeamSeason {
+  games: number;
+  /** Team averages per game, one decimal. */
+  averages: ApiStatLine;
+  /** Shooting percentages over the season, e.g. 36.7. */
+  pct: {
+    twos: number | null;
+    threes: number | null;
+    freeThrows: number | null;
+  };
+  /** Best player per category among those who played at least half the games. */
+  leaders: {
+    points: ApiLeader | null;
+    rebounds: ApiLeader | null;
+    assists: ApiLeader | null;
+    pir: ApiLeader | null;
+  };
+}
+
 export interface ApiGameDetail {
   game: ApiGame;
   box: {
@@ -98,6 +125,8 @@ export interface ApiGameDetail {
   } | null;
   /** Newest first. */
   plays: ApiPlay[];
+  /** Season numbers of both teams; only for games that have not started. */
+  preview?: { home: ApiTeamSeason | null; away: ApiTeamSeason | null } | null;
 }
 
 export interface ApiStanding {
