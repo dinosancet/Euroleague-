@@ -8,6 +8,8 @@ import type {
   ApiTeam,
   ApiTeamSeason,
 } from "@shared/api";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Image } from "expo-image";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
 import {
@@ -39,6 +41,7 @@ import {
   TeamBadge,
 } from "@/components/ui";
 import { useGameDetail, useGames, useStandings } from "@/data/api";
+import { playVideo, useVideos, type Video } from "@/data/videos";
 import { formatDay, formatTime } from "@/lib/format";
 import { colors, fonts, radius, space } from "@/theme";
 
@@ -48,6 +51,7 @@ export default function GameScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data, error, loading, refresh } = useGameDetail(id);
   const [tab, setTab] = useState<Tab>("overview");
+  const videos = useVideos();
 
   if (!data) return <LoadState error={error} onRetry={refresh} />;
   const { game, box, plays } = data;
@@ -68,6 +72,9 @@ export default function GameScreen() {
         }
       >
         <Header game={game} />
+        <HighlightsBanner
+          video={videos.data?.find((v) => v.gameCode === game.code)}
+        />
         {game.status === "scheduled" ? (
           <Preview game={game} preview={data.preview ?? null} />
         ) : (
@@ -88,6 +95,38 @@ export default function GameScreen() {
         )}
       </ScrollView>
     </>
+  );
+}
+
+/** Shown once the league has posted highlights of this game. */
+function HighlightsBanner({ video }: { video?: Video }) {
+  if (!video) return null;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Highlights ansehen: ${video.title}`}
+      onPress={() => playVideo(video)}
+      style={({ pressed }) => [s.hl, pressed && { opacity: 0.85 }]}
+    >
+      <View style={s.hlThumb}>
+        <Image
+          source={video.thumbnail}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+          accessibilityIgnoresInvertColors
+        />
+        <View style={s.hlPlay}>
+          <Ionicons name="play" size={14} color={colors.onBall} />
+        </View>
+      </View>
+      <View style={{ flex: 1, gap: 2 }}>
+        <Text style={s.hlKicker}>Highlights ansehen</Text>
+        <Text style={s.hlTitle} numberOfLines={2}>
+          {video.headline}
+        </Text>
+      </View>
+      <Ionicons name="logo-youtube" size={20} color={colors.muted} />
+    </Pressable>
   );
 }
 
@@ -717,6 +756,50 @@ function Preview({
 }
 
 const s = StyleSheet.create({
+  hl: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: space.md,
+    marginHorizontal: space.lg,
+    marginBottom: space.md,
+    padding: space.sm,
+    paddingRight: space.md,
+    borderRadius: radius.lg,
+    backgroundColor: colors.panel,
+    borderWidth: 1,
+    borderColor: colors.line,
+  },
+  hlThumb: {
+    width: 96,
+    aspectRatio: 16 / 9,
+    borderRadius: radius.sm,
+    overflow: "hidden",
+    backgroundColor: colors.panel2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  hlPlay: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: colors.ball,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingLeft: 2,
+  },
+  hlKicker: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 11,
+    color: colors.ball,
+    letterSpacing: 0.9,
+    textTransform: "uppercase",
+  },
+  hlTitle: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 14,
+    lineHeight: 19,
+    color: colors.text,
+  },
   header: {
     padding: space.lg,
     paddingTop: 18,

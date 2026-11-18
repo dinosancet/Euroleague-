@@ -237,3 +237,46 @@ export interface ApiNewsItem {
   /** Club codes as used by the data feed, e.g. ["MUN", "ZAL"]. */
   teams: string[];
 }
+
+/**
+ * "game": highlights of one game. "plays": round compilations such as the
+ * Top 10. "other": interviews, features, mini-movies.
+ */
+export type ApiVideoKind = "game" | "plays" | "other";
+
+/**
+ * One video from the league's official YouTube channel. The video itself is
+ * never copied: the app shows the thumbnail and opens the video on YouTube.
+ */
+export interface ApiVideo {
+  /** YouTube video id. */
+  id: string;
+  league: string;
+  kind: ApiVideoKind;
+  /** Short German label, e.g. "Spiel-Highlights" or "Top 10". */
+  tag: string;
+  /** Full title as published. */
+  title: string;
+  /**
+   * The catchy part of the title without team names, round and season,
+   * e.g. "Desert Storm". Equals the title when it can't be split.
+   */
+  headline: string;
+  /** Link to the video on YouTube. */
+  url: string;
+  /** Thumbnail picture from YouTube. */
+  thumbnail: string;
+  /** Channel name, e.g. "EUROLEAGUE BASKETBALL". */
+  channel: string;
+  /** ISO timestamp in UTC. */
+  publishedUtc: string;
+  /** YouTube Short (vertical clip). */
+  short: boolean;
+  /** Round the video is about, if the title names one. */
+  round: number | null;
+  /** Club codes as used by the data feed, home team first for game highlights. */
+  teams: string[];
+  /** The game the highlights belong to, for /v1/games/:code. */
+  gameCode: number | null;
+  views: number | null;
+}
