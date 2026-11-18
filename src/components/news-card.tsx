@@ -1,4 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import { Pressable, Share, StyleSheet, Text, View } from "react-native";
 
@@ -8,7 +9,10 @@ import { colors, fonts, radius, space } from "@/theme";
 import { CourtArt } from "./court-art";
 
 export function NewsCard({ article }: { article: NewsArticle }) {
-  const share = () => Share.share({ message: article.title }).catch(() => {});
+  const share = () =>
+    Share.share({
+      message: `${article.title}\n${article.url}`,
+    }).catch(() => {});
   return (
     <Pressable
       accessibilityRole="link"
@@ -34,14 +38,24 @@ export function NewsCard({ article }: { article: NewsArticle }) {
             {article.title}
           </Text>
         </View>
-        <CourtArt teams={article.teams} style={s.thumb} />
+        {article.image ? (
+          <Image
+            source={article.image}
+            style={s.thumb}
+            contentFit="cover"
+            transition={150}
+            accessibilityIgnoresInvertColors
+          />
+        ) : (
+          <CourtArt teams={article.teams} style={s.thumb} />
+        )}
       </View>
       <View style={s.footer}>
         <View style={s.srcIcon}>
           <Ionicons name="basketball" size={14} color={colors.onBall} />
         </View>
         <Text style={s.src} numberOfLines={1}>
-          {article.source} · {ageLabel(article.ageMin)}
+          {article.source} · {ageLabel(article.publishedUtc)}
         </Text>
         <Pressable
           accessibilityRole="button"
@@ -81,7 +95,13 @@ const s = StyleSheet.create({
     lineHeight: 23,
     color: colors.text,
   },
-  thumb: { width: 108, aspectRatio: 4 / 3, borderRadius: radius.sm },
+  thumb: {
+    width: 108,
+    aspectRatio: 4 / 3,
+    borderRadius: radius.sm,
+    overflow: "hidden",
+    backgroundColor: colors.panel2,
+  },
   footer: { flexDirection: "row", alignItems: "center", gap: 8 },
   srcIcon: {
     width: 22,

@@ -178,3 +178,33 @@ export interface ApiPlayerProfile {
   /** Newest first. */
   games: ApiPlayerGame[];
 }
+
+export type ApiNewsKind = "news" | "transfer";
+
+/**
+ * One headline from a public news feed. Only the headline, a short teaser and
+ * the link are passed on; the full article stays on the publisher's site.
+ */
+export interface ApiNewsItem {
+  /** Stable id derived from the article link. */
+  id: string;
+  league: string;
+  kind: ApiNewsKind;
+  /** Shown in the "Top News" filter. */
+  top: boolean;
+  /** Short label above the headline, e.g. "Transfer" or "Spielbericht". */
+  tag: string;
+  title: string;
+  /** Plain text, at most a few sentences. */
+  teaser: string;
+  /** Link to the full article on the publisher's site. */
+  url: string;
+  /** Publisher name, e.g. "Eurohoops". */
+  source: string;
+  /** ISO timestamp in UTC. */
+  publishedUtc: string;
+  /** Picture the publisher ships with the feed, if any. */
+  image: string | null;
+  /** Club codes as used by the data feed, e.g. ["MUN", "ZAL"]. */
+  teams: string[];
+}

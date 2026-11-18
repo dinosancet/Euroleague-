@@ -6,12 +6,20 @@ Kleiner Server zwischen App und Euroleague-Daten. Er holt Spielplan, Live-Spiels
 
 ## Endpunkte
 
-| Pfad                  | Inhalt                                                 | Zwischenspeicher              |
-| --------------------- | ------------------------------------------------------ | ----------------------------- |
-| `GET /v1/games`       | Alle Spiele der Saison, laufende Spiele mit Live-Stand | 60 s, Live-Stand 15 s         |
-| `GET /v1/games/:code` | Ein Spiel mit Boxscore und Play-by-Play                | 15 s live, 6 h nach Spielende |
-| `GET /v1/standings`   | Tabelle nach dem letzten gespielten Spieltag           | 5 min                         |
-| `GET /v1/teams/:code` | Kader eines Clubs, z. B. `MUN`                         | 12 h                          |
+| Pfad                    | Inhalt                                                 | Zwischenspeicher              |
+| ----------------------- | ------------------------------------------------------ | ----------------------------- |
+| `GET /v1/games`         | Alle Spiele der Saison, laufende Spiele mit Live-Stand | 60 s, Live-Stand 15 s         |
+| `GET /v1/games/:code`   | Ein Spiel mit Boxscore und Play-by-Play                | 15 s live, 6 h nach Spielende |
+| `GET /v1/standings`     | Tabelle nach dem letzten gespielten Spieltag           | 5 min                         |
+| `GET /v1/teams/:code`   | Kader eines Clubs, z. B. `MUN`                         | 12 h                          |
+| `GET /v1/players/:code` | Spielerprofil, Saisonschnitt und Spiele                | 10 min                        |
+| `GET /v1/news`          | Schlagzeilen und Transfers aus RSS-Feeds               | 15 min                        |
+
+## News
+
+`src/news.ts` liest die öffentlichen RSS-Feeds von [Eurohoops](https://www.eurohoops.net/en/euroleague/) (nur EuroLeague) und [Sportando](https://sportando.basketball/en/) (nur EuroLeague-Artikel und Wechsel von EuroLeague-Clubs). Weitergegeben werden nur Titel, ein kurzer Anrisstext, das Feed-Bild und der Link; der ganze Artikel öffnet sich auf der Seite des Verlags. Erwähnte Clubs und ob es ein Transfer ist, erkennt der Server an Stichwörtern in der Überschrift. Fällt eine Quelle aus, kommen die News der anderen. Weitere Quellen trägt man in `SOURCES` ein.
+
+> **Vor dem App Store:** Die Artikel sind englisch, und für eine kommerzielle App sollten die Verlage zustimmen (oder ein lizenzierter News-Anbieter genutzt werden), vor allem wegen der Bilder.
 
 ## Lokal starten
 
