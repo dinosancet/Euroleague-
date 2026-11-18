@@ -15,6 +15,7 @@ import {
   toProfile,
   toRoster,
   toStandings,
+  toTeamSeason,
   withPositions,
 } from "../src/normalize.ts";
 
@@ -28,6 +29,7 @@ test("formatName turns 'LAST, FIRST' into 'First Last'", () => {
   assert.equal(formatName("OKOBO, ELIE"), "Elie Okobo");
   assert.equal(formatName("PAPAGIANNIS, GEORGIOS"), "Georgios Papagiannis");
   assert.equal(formatName("DE COLO, NANDO"), "Nando De Colo");
+  assert.equal(formatName("LAWSON, A.J."), "A.J. Lawson");
   assert.equal(formatName(null), "");
 });
 
@@ -181,4 +183,34 @@ test("box score players get their short position from the roster", () => {
   const filled = withPositions(box, new Map([["011212", "Guard"]]));
   assert.equal(filled.home.find((p) => p.id === "011212")?.position, "G");
   assert.ok(filled.home.some((p) => p.position === ""));
+});
+
+test("team season: per-game averages and leaders among regular players", () => {
+  const t = toTeamSeason(fixture("club-stats"));
+  assert.ok(t);
+  assert.equal(t.games, 12);
+  assert.equal(t.averages.points, 89.1);
+  assert.equal(t.averages.rebounds, 32.5);
+  assert.equal(t.pct.threes, 36.7);
+  assert.deepEqual(t.leaders.points, {
+    id: "013370",
+    name: "Duane Washington",
+    value: 16.2,
+  });
+  assert.equal(t.leaders.rebounds?.name, "Austin Wiley");
+  assert.equal(t.leaders.assists?.name, "Rokas Jokubaitis");
+  assert.equal(t.leaders.pir?.name, "Johannes Thiemann");
+});
+
+test("team season: players with few games do not lead", () => {
+  const base = fixture("club-stats");
+  const star = structuredClone(base.playerStats[0]);
+  star.player = { code: "999999", name: "ONE, GAME" };
+  star.averagePerGame = { ...star.averagePerGame, gamesPlayed: 2, points: 40 };
+  base.playerStats.push(star);
+  assert.equal(toTeamSeason(base)?.leaders.points?.id, "013370");
+});
+
+test("team season: nothing played yet gives null", () => {
+  assert.equal(toTeamSeason({ playerStats: [], averagePerGame: null }), null);
 });
