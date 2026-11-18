@@ -13,6 +13,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 
+import { useOpenGameFromNotification, usePushSync } from "@/data/push";
 import { colors, fonts } from "@/theme";
 
 SplashScreen.preventAutoHideAsync();
@@ -41,6 +42,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
+  usePushSync();
+  useOpenGameFromNotification(loaded);
 
   if (!loaded) return null;
 

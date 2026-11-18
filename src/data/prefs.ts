@@ -33,7 +33,8 @@ const subscribe = (l: () => void) => {
 };
 
 const KEY = "hoopline.prefs.v2";
-AsyncStorage.getItem(KEY)
+/** Resolves once the saved settings are loaded (or there are none). */
+export const prefsReady: Promise<void> = AsyncStorage.getItem(KEY)
   .then((raw) => {
     if (!raw) return;
     const saved = JSON.parse(raw) as Partial<Prefs>;
@@ -45,6 +46,10 @@ AsyncStorage.getItem(KEY)
     listeners.forEach((l) => l());
   })
   .catch(() => {});
+
+/** Current settings outside React, and a way to hear about changes. */
+export const getPrefs = () => prefs;
+export const onPrefsChange = subscribe;
 
 export const useFavorites = () =>
   useSyncExternalStore(subscribe, () => prefs.favorites);

@@ -12,6 +12,13 @@
  *   /v1/teams/:code        roster of one club
  *   /v1/players/:code      player info, season averages and game log
  *   /v1/news               headlines from public RSS feeds (see news.ts)
+ *
+ * Push (POST, JSON, see push.ts and push-store.ts):
+ *   /v1/push/register      save which pushes a phone wants
+ *   /v1/push/test          send a test push to one phone
+ *
+ * A cron trigger (wrangler.toml) runs `scheduled` every minute and pushes
+ * tip-off and final score of games to the phones that follow those teams.
  */
 import type {
   ApiGame,
@@ -45,13 +52,21 @@ import {
   type ElStandingRow,
 } from "./normalize";
 import { mergeNews, parseRss, SOURCES, toNews } from "./news";
+import { dueEvents, isPushToken, parseRegistration } from "./push";
+import type { PushStore } from "./push-store";
+
+export { PushStore } from "./push-store";
 
 export interface Env {
   /** Season code, e.g. "E2026". */
   SEASON: string;
   /** Competition code: "E" = EuroLeague. */
   COMPETITION: string;
+  /** Registered phones and sent pushes (one Durable Object, see push-store.ts). */
+  PUSH: DurableObjectNamespace<PushStore>;
 }
+
+const pushStore = (env: Env) => env.PUSH.get(env.PUSH.idFromName("main"));
 
 const API = "https://api-live.euroleague.net";
 const LIVE = "https://live.euroleague.net/api";
@@ -304,7 +319,8 @@ async function news(): Promise<ApiNewsItem[]> {
 
 const CORS = {
   "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, OPTIONS",
+  "access-control-allow-methods": "GET, POST, OPTIONS",
+  "access-control-allow-headers": "content-type",
 };
 
 function json(body: unknown, status = 200, maxAge = 10): Response {
@@ -318,12 +334,48 @@ function json(body: unknown, status = 200, maxAge = 10): Response {
   });
 }
 
+async function handlePush(
+  req: Request,
+  env: Env,
+  path: string,
+): Promise<Response> {
+  const body = await req.json().catch(() => null);
+  if (path === "/v1/push/register") {
+    const reg = parseRegistration(body);
+    if (!reg) return json({ error: "Ungültige Anmeldung." }, 400, 0);
+    return json(await pushStore(env).register(reg), 200, 0);
+  }
+  if (path === "/v1/push/test") {
+    const token = (body as { token?: unknown } | null)?.token;
+    if (!isPushToken(token))
+      return json({ error: "Ungültiges Gerät." }, 400, 0);
+    const result = await pushStore(env).test(token);
+    return result === "sent"
+      ? json({ ok: true }, 200, 0)
+      : json(
+          {
+            error:
+              result === "wait"
+                ? "Bitte warte eine Minute bis zum nächsten Test."
+                : "Der Push-Dienst hat die Nachricht nicht angenommen.",
+          },
+          result === "wait" ? 429 : 502,
+          0,
+        );
+  }
+  return json({ error: "Unbekannte Adresse." }, 404, 0);
+}
+
 export async function handle(req: Request, env: Env): Promise<Response> {
   if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
+  const path = new URL(req.url).pathname.replace(/\/+$/, "");
+  if (req.method === "POST" && path.startsWith("/v1/push/"))
+    return handlePush(req, env, path).catch(() =>
+      json({ error: "Interner Fehler." }, 500, 0),
+    );
   if (req.method !== "GET")
     return json({ error: "Nur GET wird unterstützt." }, 405);
 
-  const path = new URL(req.url).pathname.replace(/\/+$/, "");
   try {
     if (path === "/v1/games") return json(await games(env));
     let m = path.match(/^\/v1\/games\/(\d+)$/);
@@ -368,4 +420,15 @@ export async function handle(req: Request, env: Env): Promise<Response> {
   }
 }
 
-export default { fetch: handle };
+/** Every minute: push tip-off and final score of due games. */
+export async function scheduled(env: Env, now = new Date()) {
+  const events = dueEvents(await games(env), now);
+  if (!events.length) return;
+  await pushStore(env).notify(events);
+}
+
+export default {
+  fetch: handle,
+  scheduled: (_c: ScheduledController, env: Env, ctx: ExecutionContext) =>
+    ctx.waitUntil(scheduled(env)),
+} satisfies ExportedHandler<Env>;

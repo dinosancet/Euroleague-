@@ -1,4 +1,6 @@
+import { useState } from "react";
 import {
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -17,12 +19,13 @@ import {
   usePush,
   type PushSettings,
 } from "@/data/prefs";
+import { sendTestPush, syncPush, usePushStatus } from "@/data/push";
 import { colors, fonts, radius, space } from "@/theme";
 
 const PUSH: [keyof PushSettings, string, string][] = [
   ["tipOff", "Spielbeginn", "15 Minuten vor Tip-off deiner Teams"],
   ["finalScore", "Endstand", "Ergebnis direkt nach der Schlusssirene"],
-  ["news", "Top-News", "Transfers und Verletzungen deiner Teams"],
+  ["news", "Top-News", "Transfers und Verletzungen deiner Teams (kommt bald)"],
 ];
 
 export default function MyTeamsScreen() {
@@ -79,11 +82,87 @@ export default function MyTeamsScreen() {
           />
         </View>
       ))}
-      <Text style={s.note}>
-        Push-Nachrichten werden angebunden, sobald ein Live-Datenanbieter
-        feststeht.
-      </Text>
+      <PushPanel teams={favs.length} />
     </ScrollView>
+  );
+}
+
+function PushPanel({ teams }: { teams: number }) {
+  const status = usePushStatus();
+  const [test, setTest] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const runTest = async () => {
+    setBusy(true);
+    const err = await sendTestPush();
+    setBusy(false);
+    setTest(
+      err ??
+        "Test-Nachricht ist unterwegs. Sie kommt in ein paar Sekunden, auch wenn die App geschlossen ist.",
+    );
+  };
+
+  let text: string;
+  let action: { label: string; onPress: () => void } | null = null;
+  let ok = false;
+  switch (status.kind) {
+    case "checking":
+      text = "Prüfe Benachrichtigungen …";
+      break;
+    case "unsupported":
+      text = "Push-Nachrichten gibt es nur in der App auf dem Handy.";
+      break;
+    case "ask":
+      text =
+        "Erlaube Benachrichtigungen, damit du Spielbeginn und Endstand deiner Teams bekommst.";
+      action = {
+        label: "Benachrichtigungen erlauben",
+        onPress: () => syncPush(true),
+      };
+      break;
+    case "denied":
+      text =
+        "Benachrichtigungen sind in den Einstellungen deines Handys ausgeschaltet.";
+      action = {
+        label: "Einstellungen öffnen",
+        onPress: () => Linking.openSettings(),
+      };
+      break;
+    case "off":
+      text =
+        teams === 0
+          ? "Wähle oben mindestens ein Team, dann bekommst du Nachrichten zu seinen Spielen."
+          : "Schalte Spielbeginn oder Endstand ein, um Nachrichten zu bekommen.";
+      break;
+    case "push":
+      ok = true;
+      text = `Push ist aktiv für ${teams} ${teams === 1 ? "Team" : "Teams"}. Die Nachrichten kommen auch, wenn die App geschlossen ist.`;
+      action = { label: "Test-Nachricht senden", onPress: runTest };
+      break;
+    case "local":
+      text = `${status.reason} ${status.reminders} ${status.reminders === 1 ? "Erinnerung" : "Erinnerungen"} für die nächsten zwei Wochen geplant.`;
+      action = { label: "Test-Nachricht senden", onPress: runTest };
+      break;
+  }
+
+  return (
+    <View style={[s.note, ok && s.noteOk]}>
+      <Text style={s.noteText}>{text}</Text>
+      {action ? (
+        <Pressable
+          accessibilityRole="button"
+          disabled={busy}
+          onPress={action.onPress}
+          style={({ pressed }) => [
+            s.button,
+            (pressed || busy) && { opacity: 0.6 },
+          ]}
+        >
+          <Text style={s.buttonText}>{action.label}</Text>
+        </Pressable>
+      ) : null}
+      {test ? <Text style={s.noteText}>{test}</Text> : null}
+    </View>
   );
 }
 
@@ -142,13 +221,29 @@ const s = StyleSheet.create({
   note: {
     margin: space.lg,
     padding: 14,
+    gap: space.md,
     borderRadius: radius.md,
     borderWidth: 1,
     borderStyle: "dashed",
     borderColor: colors.line,
+  },
+  noteOk: { borderStyle: "solid", borderColor: colors.win },
+  noteText: {
     color: colors.muted,
     fontFamily: fonts.body,
     fontSize: 12,
     lineHeight: 18,
+  },
+  button: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: radius.pill,
+    backgroundColor: colors.ball,
+  },
+  buttonText: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 13,
+    color: colors.onBall,
   },
 });

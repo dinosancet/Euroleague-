@@ -5,3 +5,18 @@ compatibility_date = "2026-10-01"
 [vars]
 COMPETITION = "E"
 SEASON = "E2026"
+
+# Push notifications: every minute the worker checks the schedule and pushes
+# tip-off and final score to phones that follow the teams (src/push.ts).
+[triggers]
+crons = ["* * * * *"]
+
+# Registered phones and sent pushes, in one SQLite-backed Durable Object
+# (included in the Workers Free plan, nothing to set up by hand).
+[[durable_objects.bindings]]
+name = "PUSH"
+class_name = "PushStore"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["PushStore"]

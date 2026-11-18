@@ -6,14 +6,14 @@ Euroleague-App für iOS und Android (Arbeitstitel „Hoopline“), gebaut mit Ex
 
 ## Screens
 
-| Bereich | Inhalt |
-| --- | --- |
-| Scores | Spieltag-Leiste, Live-Spiele, eigene Teams zuerst |
-| Game Center | Ergebnis nach Vierteln, Teamvergleich, Boxscore, Play-by-Play |
-| News | Feed mit Filter „Meine Teams“, Artikelansicht |
-| Tabelle | Hauptrunde mit Playoff- und Play-In-Zonen, Form der letzten 5 Spiele |
-| Team | Bilanz, Spiele, Kader, Folgen-Button |
-| Meine Teams | Favoriten und Push-Einstellungen (gespeichert auf dem Gerät) |
+| Bereich     | Inhalt                                                               |
+| ----------- | -------------------------------------------------------------------- |
+| Scores      | Spieltag-Leiste, Live-Spiele, eigene Teams zuerst                    |
+| Game Center | Ergebnis nach Vierteln, Teamvergleich, Boxscore, Play-by-Play        |
+| News        | Feed mit Filter „Meine Teams“, Artikelansicht                        |
+| Tabelle     | Hauptrunde mit Playoff- und Play-In-Zonen, Form der letzten 5 Spiele |
+| Team        | Bilanz, Spiele, Kader, Folgen-Button                                 |
+| Meine Teams | Favoriten und Push-Nachrichten zu Spielbeginn und Endstand           |
 
 ## Starten
 
@@ -32,6 +32,16 @@ npx expo start --web  # im Browser
 ```
 
 Die App nutzt den veröffentlichten Server `https://hoopline-api.94-dino.workers.dev`. Für einen lokalen Server setzt man `EXPO_PUBLIC_API_URL`, z. B. `EXPO_PUBLIC_API_URL=http://localhost:8787`.
+
+## Push-Nachrichten
+
+Wer in „Meine Teams“ Benachrichtigungen erlaubt, bekommt 15 Minuten vor Spielbeginn und direkt nach Spielende eine Nachricht zu seinen Teams, auch wenn die App geschlossen ist. Ein Tipp auf die Nachricht öffnet das Spiel.
+
+- Die App holt sich ein Push-Token von Expo und meldet beim Server, welche Teams sie verfolgt (`POST /v1/push/register`).
+- Der Server prüft jede Minute den Spielplan und schickt die Nachrichten über den kostenlosen Expo-Push-Dienst (siehe [`server/README.md`](server/README.md#push-nachrichten)).
+- Dafür braucht die App eine **Expo-Projekt-ID** in `app.json` (`expo.extra.eas.projectId`). Kostenlos: Konto auf [expo.dev](https://expo.dev) anlegen und ein Projekt „hoopline“ erstellen.
+- Ohne Projekt-ID (oder in Expo Go auf Android, das keine Push-Nachrichten kann) plant die App lokale Erinnerungen zum Spielbeginn. Den Endstand gibt es nur mit echtem Push.
+- Für den App Store braucht es später einen Development- oder Store-Build über EAS und das Apple-Entwicklerkonto.
 
 ## Prüfen
 
@@ -53,6 +63,7 @@ src/
   data/
     api.ts        Laden vom Server, automatische Aktualisierung bei Live-Spielen
     prefs.ts      Favoriten und Push-Einstellungen (auf dem Gerät gespeichert)
+    push.ts       Push-Anmeldung beim Server, lokale Erinnerung als Ersatz
     clubs.ts      Badge-Farben pro Club
     news.ts       Beispielartikel
   lib/format.ts   Datum und Uhrzeit
@@ -68,6 +79,5 @@ Die App spricht nur mit unserem eigenen Server. Ein Wechsel des Datenanbieters b
 - Server bei Cloudflare veröffentlichen (kostenlos)
 - Vor dem App-Store-Start: lizenzierten Datenanbieter anbinden oder Erlaubnis der Euroleague einholen
 - Echte News-Quelle
-- Push-Benachrichtigungen (expo-notifications)
 - App-Icon, Splash-Screen und endgültiger Name
 - Build und Veröffentlichung über EAS
