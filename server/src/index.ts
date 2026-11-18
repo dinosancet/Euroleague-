@@ -10,10 +10,12 @@
  *   /v1/standings          table after the latest played round
  *   /v1/teams/:code        roster of one club
  *   /v1/players/:code      player info, season averages and game log
+ *   /v1/news               headlines from public RSS feeds (see news.ts)
  */
 import type {
   ApiGame,
   ApiGameDetail,
+  ApiNewsItem,
   ApiPlayerProfile,
   ApiRoster,
   ApiStandings,
@@ -39,6 +41,7 @@ import {
   type ElPlayByPlay,
   type ElStandingRow,
 } from "./normalize";
+import { mergeNews, parseRss, SOURCES, toNews } from "./news";
 
 export interface Env {
   /** Season code, e.g. "E2026". */
@@ -58,6 +61,7 @@ const TTL = {
   standings: 300,
   roster: 12 * 3600,
   player: 600,
+  news: 900,
 };
 
 /* ---------- caching ---------- */
@@ -246,6 +250,34 @@ async function player(
   });
 }
 
+/**
+ * Headlines from all sources. A source that fails is skipped, so one broken
+ * feed does not empty the list; only if every source fails is it an error.
+ */
+async function news(): Promise<ApiNewsItem[]> {
+  return cached("news:v1", TTL.news, async () => {
+    const lists = await Promise.all(
+      SOURCES.map(async (src) => {
+        try {
+          const res = await fetch(src.url, {
+            headers: {
+              accept: "application/rss+xml, application/xml, text/xml",
+              "user-agent": "HooplineNewsReader/1.0 (RSS reader)",
+            },
+          });
+          if (!res.ok) return null;
+          return toNews(src, parseRss(await res.text()));
+        } catch {
+          return null;
+        }
+      }),
+    );
+    if (lists.every((l) => !l?.length))
+      throw new Upstream("no news source reachable");
+    return mergeNews(lists.filter((l): l is ApiNewsItem[] => l !== null));
+  });
+}
+
 /* ---------- routing ---------- */
 
 const CORS = {
@@ -279,6 +311,7 @@ export async function handle(req: Request, env: Env): Promise<Response> {
         ? json(detail)
         : json({ error: "Spiel nicht gefunden." }, 404);
     }
+    if (path === "/v1/news") return json(await news(), 200, 300);
     if (path === "/v1/standings") return json(await standings(env), 200, 60);
     m = path.match(/^\/v1\/teams\/([A-Z0-9]{2,4})$/);
     if (m) {
@@ -302,7 +335,9 @@ export async function handle(req: Request, env: Env): Promise<Response> {
     return json(
       {
         error: upstream
-          ? "Die Euroleague-Daten sind gerade nicht erreichbar."
+          ? path === "/v1/news"
+            ? "Die Nachrichtenquellen sind gerade nicht erreichbar."
+            : "Die Euroleague-Daten sind gerade nicht erreichbar."
           : "Interner Fehler.",
       },
       upstream ? 502 : 500,

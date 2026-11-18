@@ -2,10 +2,11 @@ import { useState } from "react";
 import { RefreshControl, ScrollView, StyleSheet, Text } from "react-native";
 
 import { GameStrip } from "@/components/game-strip";
+import { LoadState } from "@/components/load-state";
 import { NewsCard } from "@/components/news-card";
 import { Chip, Empty } from "@/components/ui";
 import { load } from "@/data/api";
-import { NEWS } from "@/data/news";
+import { type NewsArticle, useNews } from "@/data/news";
 import { useFavorites, useLeague } from "@/data/prefs";
 import { colors, fonts, space } from "@/theme";
 
@@ -23,9 +24,10 @@ export default function HomeScreen() {
   const favs = useFavorites();
   const league = useLeague();
 
-  const inLeague = NEWS.filter((n) => n.league === league);
-  const mine = (n: (typeof NEWS)[number]) =>
-    n.teams.some((t) => favs.includes(t));
+  const news = useNews();
+
+  const inLeague = (news.data ?? []).filter((n) => n.league === league);
+  const mine = (n: NewsArticle) => n.teams.some((t) => favs.includes(t));
   const items =
     feed === "top"
       ? inLeague.filter((n) => n.top)
@@ -33,12 +35,18 @@ export default function HomeScreen() {
         ? inLeague.filter((n) => n.kind === "transfer")
         : // "Für dich": your teams first, then everything else, newest first within each.
           [...inLeague].sort(
-            (a, b) => Number(mine(b)) - Number(mine(a)) || a.ageMin - b.ageMin,
+            (a, b) =>
+              Number(mine(b)) - Number(mine(a)) ||
+              b.publishedUtc.localeCompare(a.publishedUtc),
           );
 
   const refresh = async () => {
     setRefreshing(true);
-    await Promise.all([load("/v1/games"), load("/v1/standings")]);
+    await Promise.all([
+      load("/v1/games"),
+      load("/v1/standings"),
+      load("/v1/news"),
+    ]);
     setRefreshing(false);
   };
 
@@ -69,14 +77,19 @@ export default function HomeScreen() {
           />
         ))}
       </ScrollView>
-      {items.length === 0 ? (
+      {!news.data ? (
+        <LoadState error={news.error} onRetry={news.refresh} />
+      ) : items.length === 0 ? (
         <Empty>Hier gibt es gerade nichts Neues.</Empty>
       ) : (
         items.map((n) => <NewsCard key={n.id} article={n} />)
       )}
-      <Text style={s.notice}>
-        Beispielartikel, bis eine Nachrichtenquelle angebunden ist.
-      </Text>
+      {news.data ? (
+        <Text style={s.notice}>
+          Schlagzeilen von Eurohoops und Sportando. Ganze Artikel öffnen sich
+          auf deren Seiten.
+        </Text>
+      ) : null}
     </ScrollView>
   );
 }
