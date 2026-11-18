@@ -1,3 +1,4 @@
+import * as WebBrowser from "expo-web-browser";
 import { useState } from "react";
 import {
   Linking,
@@ -21,6 +22,13 @@ import {
 } from "@/data/prefs";
 import { sendTestPush, syncPush, usePushStatus } from "@/data/push";
 import { colors, fonts, radius, space } from "@/theme";
+
+/** Privacy policy and Impressum, published from docs/ via GitHub Pages. */
+const LEGAL_URL = "https://dinosancet.github.io/Euroleague-";
+const LEGAL: [string, string][] = [
+  ["Datenschutz", `${LEGAL_URL}/datenschutz.html`],
+  ["Impressum", `${LEGAL_URL}/impressum.html`],
+];
 
 const PUSH: [keyof PushSettings, string, string][] = [
   ["tipOff", "Spielbeginn", "15 Minuten vor Tip-off deiner Teams"],
@@ -83,6 +91,24 @@ export default function MyTeamsScreen() {
         </View>
       ))}
       <PushPanel teams={favs.length} />
+
+      <SectionHeader title="Rechtliches" />
+      {LEGAL.map(([label, url]) => (
+        <Pressable
+          key={label}
+          accessibilityRole="link"
+          onPress={() =>
+            WebBrowser.openBrowserAsync(url, {
+              toolbarColor: colors.ink,
+              controlsColor: colors.ball,
+            }).catch(() => {})
+          }
+          style={s.toggleRow}
+        >
+          <Text style={[s.toggleLabel, { flex: 1 }]}>{label}</Text>
+          <Text style={s.toggleDesc}>›</Text>
+        </Pressable>
+      ))}
     </ScrollView>
   );
 }
